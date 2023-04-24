@@ -8,6 +8,6 @@ Repositório destinado ao Projeto Final do Curso de Desenvolvimento Web - SAPER
 - Levi Queiroz De Holanda Ribeiro
 - Angélica Alves Viana
 - Darlan Almeida Barroso
-- Galba
+- José Galba Dutra Junior
 
 
