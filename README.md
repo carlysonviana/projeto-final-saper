@@ -16,13 +16,13 @@ O sistema deve ser capaz de exibir para os médicos a sua lista de atendimento d
 
 ### Requisitos
 
-- [] Cadastro de médico;
-- [] Cadastro de pacientes;
-- [] Configurar agenda de atendimento de médico;
-- [] Marcar consulta;
-- [] Confirmar presença;
-- [] Confirmar autorização do plano de saúde;
-- [] Registrar consulta;
-- [] Visualizar protuário;
-- [] Gerenciar fila de atendimento.
+- [ ] Cadastro de médico;
+- [ ] Cadastro de pacientes;
+- [ ] Configurar agenda de atendimento de médico;
+- [ ] Marcar consulta;
+- [ ] Confirmar presença;
+- [ ] Confirmar autorização do plano de saúde;
+- [ ] Registrar consulta;
+- [ ] Visualizar protuário;
+- [ ] Gerenciar fila de atendimento.
 
