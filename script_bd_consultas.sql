@@ -97,6 +97,7 @@ CREATE TABLE HorarioAtendimento
 CREATE TABLE Fila
 (
     id_Fila INT NOT NULL PRIMARY KEY,
+    tipoDeFila VARCHAR2(45) NOT NULL,
     id_Especialidade INT,
     CONSTRAINT fk_especialidade_Fila FOREIGN KEY(id_Especialidade) REFERENCES Especialidade(id_Especialidade)
 );
