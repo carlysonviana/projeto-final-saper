@@ -9,7 +9,6 @@ public class PacienteRequestDTO {
     public String cpf;
     public String nome;
     public String email;
-
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
     public LocalDate dataNascimento;

@@ -36,7 +36,7 @@ public class PacienteService {
         if(pacienteOptional.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Paciente não encontrado");
         }else{
-            return ResponseEntity.status(HttpStatus.OK).body(pacienteOptional.get());
+            return ResponseEntity.status(HttpStatus.OK).body(new PacienteResponseDTO(pacienteOptional.get()));
         }
     }
 

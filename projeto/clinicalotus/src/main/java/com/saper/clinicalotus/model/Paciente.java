@@ -1,10 +1,9 @@
 package com.saper.clinicalotus.model;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.saper.clinicalotus.dto.PacienteRequestDTO;
 import jakarta.persistence.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 public class Paciente {
@@ -25,16 +24,11 @@ public class Paciente {
 
     private String email;
 
-//    @DateTimeFormat(pattern = "dd/MM/yyyy")
-//    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
-    public LocalDate getDataNascimento() {
-        return dataNascimento;
-    }
 
-    public void setDataNascimento(LocalDate dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
+    @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL)
+    Set<Consulta> consultas;
+
 
     public Paciente() {
     }
@@ -76,5 +70,21 @@ public class Paciente {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+
+    public Set<Consulta> getConsultas() {
+        return consultas;
+    }
+
+    public void setConsultas(Set<Consulta> consultas) {
+        this.consultas = consultas;
     }
 }
