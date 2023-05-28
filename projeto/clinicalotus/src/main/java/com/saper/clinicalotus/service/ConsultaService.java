@@ -22,7 +22,7 @@ public class ConsultaService {
     PacienteRepository pacienteRepository;
     @Transactional
     public ResponseEntity<Object> save(ConsultaRequestDTO consultaRequestDTO) {
-        //Verifcar se paciente existe
+        //Verifcar se consulta existe
         Optional<Paciente> optionalPaciente = pacienteRepository.findById(consultaRequestDTO.paciente_id);
 
         if(optionalPaciente.isEmpty()){
