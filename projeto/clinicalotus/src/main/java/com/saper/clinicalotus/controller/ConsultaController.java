@@ -3,7 +3,10 @@ package com.saper.clinicalotus.controller;
 import com.saper.clinicalotus.dto.ConsultaRequestDTO;
 import com.saper.clinicalotus.service.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/consulta")
@@ -20,6 +23,12 @@ public class ConsultaController {
     public Object getOne(@PathVariable(name = "id") Long id){
         return consultaService.findById(id);
     }
+
+    @GetMapping("/paciente")
+    public Object getAllByPaciente_Id(@RequestParam(name = "id") Long paciente_id){
+        return consultaService.getAllByPaciente_Id(paciente_id);
+    }
+
     @PostMapping
     public Object save(@RequestBody ConsultaRequestDTO teamRequestDTO){
         return consultaService.save(teamRequestDTO);
