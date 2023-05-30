@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/consulta")
@@ -14,6 +15,14 @@ public class ConsultaController {
     @Autowired
     ConsultaService consultaService;
 
+    @GetMapping("/busca")
+    public Object getAllByParameters(@RequestParam(required = false, name="consultaId") Long consultaId,
+                                     @RequestParam(required = false, name="dataHora") @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss") LocalDateTime dataHora,
+                                     @RequestParam(required = false, name="confirmada") Boolean confirmada,
+                                     @RequestParam(required = false, name="autorizacaoPlano") Boolean autorizacaoPlano,
+                                     @RequestParam(required = false, name="pacienteId") Long pacienteId){
+        return consultaService.getAllByParameters(consultaId, dataHora, confirmada, autorizacaoPlano, pacienteId);
+    }
     @GetMapping
     public Object getAll(){
         return consultaService.getAll();
