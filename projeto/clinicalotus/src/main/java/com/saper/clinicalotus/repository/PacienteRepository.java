@@ -10,7 +10,8 @@ import java.util.List;
 public interface PacienteRepository extends JpaRepository<Paciente, Long> {
     @Query("SELECT p FROM Paciente p WHERE " +
             "(:id is null or p.id = :id) " +
-            "and (:nome is null or p.nome = :nome) "+
+            "and (:nome is null or p.nome = :nome "+
+            "or SUBSTRING(p.nome, 1, LOCATE(' ', p.nome) - 1) = :nome) "+
             "and (:cpf is null or p.cpf = :cpf) " +
             "and (:email is null or p.email = :email) " +
             "and (:dataNascimento is null or p.dataNascimento = :dataNascimento)")
