@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -70,4 +71,11 @@ public class PacienteService {
         }
     }
 
+    public ResponseEntity<Object> getAllByParameters(Long pacienteId, String nome, String cpf, String email, LocalDate dataNascimento) {
+        return ResponseEntity.status(HttpStatus.OK).body(pacienteRepository.findAllByParameters(pacienteId, nome, cpf, email, dataNascimento).stream().map((PacienteResponseDTO::new)));
+    }
+
+    public ResponseEntity<Object> getAllByPrimeiroNome(String primeiroNome) {
+        return ResponseEntity.status(HttpStatus.OK).body(pacienteRepository.findByNomeStartingWithIgnoreCase(primeiroNome).stream().map((PacienteResponseDTO::new)));
+    }
 }
