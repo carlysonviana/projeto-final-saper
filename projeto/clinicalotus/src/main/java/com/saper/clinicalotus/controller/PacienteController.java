@@ -3,7 +3,9 @@ package com.saper.clinicalotus.controller;
 import com.saper.clinicalotus.dto.PacienteRequestDTO;
 import com.saper.clinicalotus.service.PacienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/paciente")
@@ -11,6 +13,20 @@ public class PacienteController {
 
     @Autowired
     PacienteService pacienteService;
+
+    @GetMapping("/busca")
+    public Object getAllByParameters(@RequestParam(required = false, name="pacienteId") Long pacienteId,
+                                     @RequestParam(required = false, name="nome") String nome,
+                                     @RequestParam(required = false, name="cpf") String cpf,
+                                     @RequestParam(required = false, name="email") String email,
+                                     @RequestParam(required = false, name="dataNascimento") @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate dataNascimento) {
+        return pacienteService.getAllByParameters(pacienteId, nome, cpf, email, dataNascimento);
+    }
+
+    @GetMapping("/primeiroNome")
+    public Object getAllByPrimeiroNome(@RequestParam(name="primeiroNome") String primeiroNome) {
+        return pacienteService.getAllByPrimeiroNome(primeiroNome);
+    }
 
     @GetMapping
     public Object getAll(){

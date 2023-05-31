@@ -14,6 +14,8 @@ public class PacienteResponseDTO {
     public long id;
     public String nome;
 
+    public String cpf;
+
     public String email;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -23,6 +25,7 @@ public class PacienteResponseDTO {
     public PacienteResponseDTO(Paciente paciente) {
         this.id = paciente.getId();
         this.nome = paciente.getNome();
+        this.cpf = paciente.getCpf();
         this.email = paciente.getEmail();
         this.dataNascimento = paciente.getDataNascimento();
         Set<Consulta> consultas = paciente.getConsultas();
