@@ -14,8 +14,9 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
             "or SUBSTRING(p.nome, 1, LOCATE(' ', p.nome) - 1) = :nome) "+
             "and (:cpf is null or p.cpf = :cpf) " +
             "and (:email is null or p.email = :email) " +
-            "and (:dataNascimento is null or p.dataNascimento = :dataNascimento)")
-    List<Paciente> findAllByParameters(Long id, String nome, String cpf, String email, LocalDate dataNascimento);
+            "and (:dataNascimento is null or p.dataNascimento = :dataNascimento) "+
+            "and (:enderecoId is null or p.endereco.id = :enderecoId)")
+    List<Paciente> findAllByParameters(Long id, String nome, String cpf, String email, LocalDate dataNascimento, Long enderecoId);
 
     List<Paciente> findByNomeStartingWithIgnoreCase(String primeiroNome);
 

@@ -29,8 +29,20 @@ public class Paciente {
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL)
     Set<Consulta> consultas;
 
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "endereco_id", nullable = true)
+    private Endereco endereco;
+
 
     public Paciente() {
+    }
+
+    public Paciente(String cpf, String nome, String email, LocalDate dataNascimento, Endereco endereco) {
+        this.cpf = cpf;
+        this.nome = nome;
+        this.email = email;
+        this.dataNascimento = dataNascimento;
+        this.endereco = endereco;
     }
 
     public Paciente(PacienteRequestDTO pacienteRequestDTO) {
@@ -86,5 +98,13 @@ public class Paciente {
 
     public void setConsultas(Set<Consulta> consultas) {
         this.consultas = consultas;
+    }
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
     }
 }

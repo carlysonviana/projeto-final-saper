@@ -1,7 +1,9 @@
 package com.saper.clinicalotus.service;
 import com.saper.clinicalotus.dto.PacienteRequestDTO;
 import com.saper.clinicalotus.dto.PacienteResponseDTO;
+import com.saper.clinicalotus.model.Endereco;
 import com.saper.clinicalotus.model.Paciente;
+import com.saper.clinicalotus.repository.EnderecoRepository;
 import com.saper.clinicalotus.repository.PacienteRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +18,30 @@ public class PacienteService {
     @Autowired
     PacienteRepository pacienteRepository;
 
+    @Autowired
+    EnderecoRepository enderecoRepository;
+
     public Object getAll(){
         return pacienteRepository.findAll().stream().map((paciente -> new PacienteResponseDTO(paciente)));
     }
 
     @Transactional
     public Object save(PacienteRequestDTO pacienteRequestDTO){
-        Paciente paciente = new Paciente(pacienteRequestDTO);
+        Optional<Endereco> optionalEndereco = enderecoRepository.findById(pacienteRequestDTO.endereco_id);
 
-        paciente = pacienteRepository.save(paciente);
+        if(optionalEndereco.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereco não encontrado!");
+        }
 
-        PacienteResponseDTO pacienteResponseDTO = new PacienteResponseDTO(paciente);
+        Paciente paciente = new Paciente();
+        paciente.setCpf(pacienteRequestDTO.cpf);
+        paciente.setNome(pacienteRequestDTO.nome);
+        paciente.setEmail(pacienteRequestDTO.email);
+        paciente.setDataNascimento(pacienteRequestDTO.dataNascimento);
+        paciente.setEndereco(optionalEndereco.get());
 
-        return pacienteResponseDTO;
+        pacienteRepository.save(paciente);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new PacienteResponseDTO(paciente));
     }
 
     public ResponseEntity<Object> findById(Long id) {
@@ -71,8 +84,8 @@ public class PacienteService {
         }
     }
 
-    public ResponseEntity<Object> getAllByParameters(Long pacienteId, String nome, String cpf, String email, LocalDate dataNascimento) {
-        return ResponseEntity.status(HttpStatus.OK).body(pacienteRepository.findAllByParameters(pacienteId, nome, cpf, email, dataNascimento).stream().map((PacienteResponseDTO::new)));
+    public ResponseEntity<Object> getAllByParameters(Long pacienteId, String nome, String cpf, String email, LocalDate dataNascimento, Long enderecoId) {
+        return ResponseEntity.status(HttpStatus.OK).body(pacienteRepository.findAllByParameters(pacienteId, nome, cpf, email, dataNascimento, enderecoId).stream().map((PacienteResponseDTO::new)));
     }
 
     public ResponseEntity<Object> getAllByPrimeiroNome(String primeiroNome) {

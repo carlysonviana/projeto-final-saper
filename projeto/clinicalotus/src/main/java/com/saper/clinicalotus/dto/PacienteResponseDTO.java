@@ -3,6 +3,7 @@ package com.saper.clinicalotus.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.saper.clinicalotus.model.Consulta;
 import com.saper.clinicalotus.model.Paciente;
+import jakarta.annotation.Nullable;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -22,12 +23,16 @@ public class PacienteResponseDTO {
     @JsonFormat(pattern = "dd/MM/yyyy")
     public LocalDate dataNascimento;
     public List<Long> consultas;
+
+    @Nullable
+    public Long endereco_id;
     public PacienteResponseDTO(Paciente paciente) {
         this.id = paciente.getId();
         this.nome = paciente.getNome();
         this.cpf = paciente.getCpf();
         this.email = paciente.getEmail();
         this.dataNascimento = paciente.getDataNascimento();
+        this.endereco_id = paciente.getEndereco().getId();
         Set<Consulta> consultas = paciente.getConsultas();
         if(consultas != null){
             this.consultas = paciente.getConsultas().stream().map(consulta -> consulta.getId()).toList();

@@ -19,8 +19,9 @@ public class PacienteController {
                                      @RequestParam(required = false, name="nome") String nome,
                                      @RequestParam(required = false, name="cpf") String cpf,
                                      @RequestParam(required = false, name="email") String email,
-                                     @RequestParam(required = false, name="dataNascimento") @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate dataNascimento) {
-        return pacienteService.getAllByParameters(pacienteId, nome, cpf, email, dataNascimento);
+                                     @RequestParam(required = false, name="dataNascimento") @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate dataNascimento,
+                                     @RequestParam(required = false, name="enderecoId") Long enderecoId) {
+        return pacienteService.getAllByParameters(pacienteId, nome, cpf, email, dataNascimento, enderecoId);
     }
 
     @GetMapping("/primeiroNome")

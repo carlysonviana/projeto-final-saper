@@ -2,13 +2,9 @@ package com.saper.clinicalotus.model;
 
 import com.saper.clinicalotus.dto.EnderecoRequestDTO;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity
 public class Endereco {
@@ -25,6 +21,9 @@ public class Endereco {
     @ManyToOne
     @JoinColumn(name = "cidade_id")
     private Cidade cidade;
+
+    @OneToMany(mappedBy = "endereco", cascade = CascadeType.ALL)
+    Set<Paciente> pacientes;
 
     public Endereco(){
 
@@ -93,6 +92,14 @@ public class Endereco {
 
     public void setCidade(Cidade cidade) {
         this.cidade = cidade;
-    }   
+    }
+
+    public Set<Paciente> getPacientes() {
+        return pacientes;
+    }
+
+    public void setPacientes(Set<Paciente> pacientes) {
+        this.pacientes = pacientes;
+    }
     
 }
