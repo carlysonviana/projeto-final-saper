@@ -26,19 +26,10 @@ public class Medico {
 
     }
     
-    public Medico(Long id, Funcionario funcionario, String crm, Especialidade especialidade) {
-        this.id = id;
+    public Medico(Funcionario funcionario, String crm, Especialidade especialidade) {
         this.funcionario = funcionario;
         this.crm = crm;
         this.especialidade = especialidade;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Funcionario getFuncionario() {

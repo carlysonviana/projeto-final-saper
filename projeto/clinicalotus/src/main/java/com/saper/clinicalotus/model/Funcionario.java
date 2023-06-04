@@ -38,6 +38,10 @@ public class Funcionario {
     private String celular;
     private LocalDate dataAdmissao;
 
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "endereco_id", nullable = true)
+    private Endereco endereco;
+
     @ManyToOne
     @JoinColumn(name = "categoriaFuncionario_id")
     private CategoriaFuncionario categoriaFuncionario;
@@ -58,7 +62,7 @@ public class Funcionario {
         this.telefone = funcionarioRequestDTO.telefone;
         this.celular = funcionarioRequestDTO.celular;
         this.dataAdmissao = funcionarioRequestDTO.dataAdmissao;
-        this.categoriaFuncionario = funcionarioRequestDTO.categoriaFuncionario;
+        this.endereco = funcionarioRequestDTO.endereco;
     }
 
     public Long getId() {
@@ -141,6 +145,14 @@ public class Funcionario {
         this.medico = medico;
     }
 
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;

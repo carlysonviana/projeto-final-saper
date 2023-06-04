@@ -5,7 +5,9 @@ import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.saper.clinicalotus.model.CategoriaFuncionario;
+import com.saper.clinicalotus.model.Endereco;
+
+import io.micrometer.common.lang.Nullable;
 
 public class FuncionarioRequestDTO {
 
@@ -20,8 +22,9 @@ public class FuncionarioRequestDTO {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
     public LocalDate dataAdmissao;
+    @Nullable
+    public Endereco endereco;
 
-    public CategoriaFuncionario categoriaFuncionario;
-
+    public Long categoriaFuncionario_id;
     
 }

@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.saper.clinicalotus.dto.MedicoRequestDTO;
 import com.saper.clinicalotus.dto.MedicoResponseDTO;
+import com.saper.clinicalotus.model.Especialidade;
 import com.saper.clinicalotus.model.Medico;
+import com.saper.clinicalotus.repository.EspecialidadeRepository;
 import com.saper.clinicalotus.repository.MedicoRepository;
 
 import jakarta.transaction.Transactional;
@@ -20,15 +22,8 @@ public class MedicoService {
     @Autowired
     MedicoRepository medicoRepository;
 
-    @Transactional
-    public ResponseEntity<Object> save(MedicoRequestDTO medicoRequestDTO){
-
-        Medico medico = new Medico();
-        medico.setCrm(medicoRequestDTO.crm);
-
-        medicoRepository.save(medico);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MedicoResponseDTO(medico));
-    }
+    @Autowired
+    EspecialidadeRepository especialidadeRepository;
 
     public ResponseEntity<Object> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(medicoRepository.findAll()
@@ -47,6 +42,7 @@ public class MedicoService {
     @Transactional
     public Object update(Long id, MedicoRequestDTO medicoRequestDTO) {
         Optional<Medico> medicoOptional = medicoRepository.findById(id);
+        Optional<Especialidade> especialidadeOptional = especialidadeRepository.findById(medicoRequestDTO.especialidade_id);
 
         if(medicoOptional.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoria não encontrada!");
@@ -55,6 +51,9 @@ public class MedicoService {
 
             if(medicoRequestDTO.crm != null){
                 medico.setCrm(medicoRequestDTO.crm);
+            }
+            if(medicoRequestDTO.especialidade_id != null){
+                medico.setEspecialidade(especialidadeOptional.get());
             }
 
             return ResponseEntity.status(HttpStatus.OK).body(new MedicoResponseDTO(medicoRepository.save(medico)));

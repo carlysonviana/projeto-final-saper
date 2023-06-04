@@ -1,8 +1,10 @@
 package com.saper.clinicalotus.service;
 import com.saper.clinicalotus.dto.FuncionarioRequestDTO;
 import com.saper.clinicalotus.dto.FuncionarioResponseDTO;
+import com.saper.clinicalotus.model.CategoriaFuncionario;
 import com.saper.clinicalotus.model.Funcionario;
 import com.saper.clinicalotus.model.Medico;
+import com.saper.clinicalotus.repository.CategoriaFuncionarioRepository;
 import com.saper.clinicalotus.repository.FuncionarioRepository;
 import com.saper.clinicalotus.repository.MedicoRepository;
 
@@ -21,12 +23,19 @@ public class FuncionarioService {
     @Autowired
     MedicoRepository medicoRepository;
 
+    @Autowired
+    CategoriaFuncionarioRepository categoriaFuncionarioRepository;
+
     @Transactional
     public Object save(FuncionarioRequestDTO funcionarioRequestDTO){
         Funcionario funcionario = new Funcionario(funcionarioRequestDTO);
-        
+
+        Optional<CategoriaFuncionario> categorOptional =  categoriaFuncionarioRepository.findById(funcionarioRequestDTO.categoriaFuncionario_id);
+
+        funcionario.setCategoriaFuncionario(categorOptional.get());
         funcionario = funcionarioRepository.save(funcionario);
-        if (funcionarioRequestDTO.categoriaFuncionario.getId() == 2){
+
+        if (categorOptional.get().getNome().equals("Médico")){
             Medico medico = new Medico();
             medico.setFuncionario(funcionario);
             medicoRepository.save(medico);
@@ -72,6 +81,7 @@ public class FuncionarioService {
             if(funcionarioRequestDTO.celular != null){
                 funcionario.setCelular(funcionarioRequestDTO.celular);
             }
+            
             return ResponseEntity.status(HttpStatus.OK).body(new FuncionarioResponseDTO(funcionarioRepository.save(funcionario)));
         }
     }
