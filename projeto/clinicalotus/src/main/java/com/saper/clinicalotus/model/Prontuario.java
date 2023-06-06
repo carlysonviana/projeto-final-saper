@@ -11,8 +11,11 @@ public class Prontuario {
     @Column(name = "prontuario_id")
     private Long id;
 
+    //@ManyToOne
+    //@JoinColumn(name = "medico_id")
     //Medico medico;
 
+    //@OneToOne(mappedBy="prontuario", cascade = CascadeType.ALL)
     // private Paciente paciente;
 
     private String receituario;

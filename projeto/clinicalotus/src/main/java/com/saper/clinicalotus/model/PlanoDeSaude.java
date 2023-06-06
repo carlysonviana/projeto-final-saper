@@ -4,6 +4,8 @@ package com.saper.clinicalotus.model;
 import com.saper.clinicalotus.dto.PlanoDeSaudeRequestDTO;
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 public class PlanoDeSaude {
 
@@ -15,6 +17,10 @@ public class PlanoDeSaude {
     private String nome;
 
     private String descricao;
+
+    //@OneToMany(mappedBy = "planoDeSaude")
+    //Set<Paciente> pacientes;
+
 
     public Long getId() {
         return id;
