@@ -26,13 +26,18 @@ public class PacienteResponseDTO {
 
     @Nullable
     public Long endereco_id;
+
+    @Nullable
+    public Long plano_id;
     public PacienteResponseDTO(Paciente paciente) {
         this.id = paciente.getId();
         this.nome = paciente.getNome();
         this.cpf = paciente.getCpf();
         this.email = paciente.getEmail();
         this.dataNascimento = paciente.getDataNascimento();
-        this.endereco_id = paciente.getEndereco().getId();
+        this.endereco_id = (paciente.getEndereco() != null) ? paciente.getEndereco().getId() : null;
+        this.plano_id = (paciente.getPlanoDeSaude() != null) ? paciente.getPlanoDeSaude().getId() : null;
+
         Set<Consulta> consultas = paciente.getConsultas();
         if(consultas != null){
             this.consultas = paciente.getConsultas().stream().map(consulta -> consulta.getId()).toList();

@@ -16,4 +16,7 @@ public class PacienteRequestDTO {
 
     @Nullable
     public Long endereco_id;
+
+    @Nullable
+    public Long plano_id;
 }

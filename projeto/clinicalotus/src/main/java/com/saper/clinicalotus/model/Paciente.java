@@ -33,16 +33,21 @@ public class Paciente {
     @JoinColumn(name = "endereco_id", nullable = true)
     private Endereco endereco;
 
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "plano_id", nullable = true)
+    private PlanoDeSaude planoDeSaude;
+
 
     public Paciente() {
     }
 
-    public Paciente(String cpf, String nome, String email, LocalDate dataNascimento, Endereco endereco) {
+    public Paciente(String cpf, String nome, String email, LocalDate dataNascimento, Endereco endereco, PlanoDeSaude planoDeSaude) {
         this.cpf = cpf;
         this.nome = nome;
         this.email = email;
         this.dataNascimento = dataNascimento;
         this.endereco = endereco;
+        this.planoDeSaude = planoDeSaude;
     }
 
     public Paciente(PacienteRequestDTO pacienteRequestDTO) {
@@ -106,5 +111,13 @@ public class Paciente {
 
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
+    }
+
+    public PlanoDeSaude getPlanoDeSaude() {
+        return planoDeSaude;
+    }
+
+    public void setPlanoDeSaude(PlanoDeSaude planoDeSaude) {
+        this.planoDeSaude = planoDeSaude;
     }
 }
