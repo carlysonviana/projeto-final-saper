@@ -18,8 +18,17 @@ public class PlanoDeSaude {
 
     private String descricao;
 
-    //@OneToMany(mappedBy = "planoDeSaude")
-    //Set<Paciente> pacientes;
+    @OneToMany(mappedBy = "planoDeSaude", cascade = CascadeType.ALL)
+    Set<Paciente> pacientes;
+    
+    public PlanoDeSaude() {
+    }
+
+    public PlanoDeSaude(PlanoDeSaudeRequestDTO planoDeSaudeRequestDTO){
+        this.nome = planoDeSaudeRequestDTO.nome;
+        this.descricao = planoDeSaudeRequestDTO.descricao;
+
+    }
 
 
     public Long getId() {
@@ -46,12 +55,11 @@ public class PlanoDeSaude {
         this.descricao = descricao;
     }
 
-    public PlanoDeSaude() {
+    public Set<Paciente> getPacientes() {
+        return pacientes;
     }
 
-    public PlanoDeSaude(PlanoDeSaudeRequestDTO planoDeSaudeRequestDTO){
-        this.nome = planoDeSaudeRequestDTO.nome;
-        this.descricao = planoDeSaudeRequestDTO.descricao;
-
+    public void setPacientes(Set<Paciente> pacientes) {
+        this.pacientes = pacientes;
     }
 }

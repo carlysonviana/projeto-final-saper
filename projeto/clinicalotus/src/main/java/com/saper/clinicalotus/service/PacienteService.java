@@ -3,8 +3,10 @@ import com.saper.clinicalotus.dto.PacienteRequestDTO;
 import com.saper.clinicalotus.dto.PacienteResponseDTO;
 import com.saper.clinicalotus.model.Endereco;
 import com.saper.clinicalotus.model.Paciente;
+import com.saper.clinicalotus.model.PlanoDeSaude;
 import com.saper.clinicalotus.repository.EnderecoRepository;
 import com.saper.clinicalotus.repository.PacienteRepository;
+import com.saper.clinicalotus.repository.PlanoDeSaudeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,24 +23,34 @@ public class PacienteService {
     @Autowired
     EnderecoRepository enderecoRepository;
 
+    @Autowired
+    PlanoDeSaudeRepository planoDeSaudeRepository;
+
     public Object getAll(){
         return pacienteRepository.findAll().stream().map((paciente -> new PacienteResponseDTO(paciente)));
     }
 
     @Transactional
     public Object save(PacienteRequestDTO pacienteRequestDTO){
-        Optional<Endereco> optionalEndereco = enderecoRepository.findById(pacienteRequestDTO.endereco_id);
-
-        if(optionalEndereco.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereco não encontrado!");
-        }
+        Optional<Endereco> optionalEndereco;
+        Optional<PlanoDeSaude> optionalPlanoDeSaude;
 
         Paciente paciente = new Paciente();
+
+        if(pacienteRequestDTO.endereco_id != null){
+            optionalEndereco = enderecoRepository.findById(pacienteRequestDTO.endereco_id);
+            paciente.setEndereco(optionalEndereco.get());
+        }
+
+        if(pacienteRequestDTO.plano_id != null){
+            optionalPlanoDeSaude = planoDeSaudeRepository.findById(pacienteRequestDTO.plano_id);
+            paciente.setPlanoDeSaude(optionalPlanoDeSaude.get());
+        }
+
         paciente.setCpf(pacienteRequestDTO.cpf);
         paciente.setNome(pacienteRequestDTO.nome);
         paciente.setEmail(pacienteRequestDTO.email);
         paciente.setDataNascimento(pacienteRequestDTO.dataNascimento);
-        paciente.setEndereco(optionalEndereco.get());
 
         pacienteRepository.save(paciente);
         return ResponseEntity.status(HttpStatus.CREATED).body(new PacienteResponseDTO(paciente));
@@ -68,6 +80,9 @@ public class PacienteService {
             }
             if(pacienteRequestDTO.email != null){
                 paciente.setEmail(pacienteRequestDTO.email);
+            }
+            if(pacienteRequestDTO.dataNascimento != null){
+                paciente.setDataNascimento(pacienteRequestDTO.dataNascimento);
             }
             return ResponseEntity.status(HttpStatus.OK).body(new PacienteResponseDTO(pacienteRepository.save(paciente)));
         }
