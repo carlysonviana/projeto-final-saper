@@ -6,9 +6,7 @@ public class ProntuarioResponseDTO {
 
       public Long id;
 
-    //public Long medico_id;
-
-    //  public Long paciente_id;
+      public Long paciente_id;
 
       public String receituario;
 
@@ -16,6 +14,7 @@ public class ProntuarioResponseDTO {
 
       public ProntuarioResponseDTO(Prontuario prontuario) {
             this.id = prontuario.getId();
+            this.paciente_id = prontuario.getPaciente().getId();
             this.receituario = prontuario.getReceituario();
             this.diagnostico = prontuario.getDiagnostico();
       }

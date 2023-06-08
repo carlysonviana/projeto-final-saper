@@ -3,7 +3,9 @@ package com.saper.clinicalotus.service;
 
 import com.saper.clinicalotus.dto.ProntuarioRequestDTO;
 import com.saper.clinicalotus.dto.ProntuarioResponseDTO;
+import com.saper.clinicalotus.model.Paciente;
 import com.saper.clinicalotus.model.Prontuario;
+import com.saper.clinicalotus.repository.PacienteRepository;
 import com.saper.clinicalotus.repository.ProntuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ public class ProntuarioService {
 
     @Autowired
     ProntuarioRepository prontuarioRepository;
+    @Autowired
+    PacienteRepository pacienteRepository;
 
     public Object findById(Long id) {
         Optional<Prontuario> prontuarioOptional = prontuarioRepository.findById(id);
@@ -36,13 +40,22 @@ public class ProntuarioService {
 
     @Transactional
     public Object save(ProntuarioRequestDTO prontuarioRequestDTO) {
-        Prontuario prontuario = new Prontuario(prontuarioRequestDTO);
+        Optional<Paciente> pacienteOptional;
+
+        Prontuario prontuario = new Prontuario();
+
+        if(prontuarioRequestDTO.paciente_id != null){
+            pacienteOptional = pacienteRepository.findById(prontuarioRequestDTO.paciente_id);
+            prontuario.setPaciente(pacienteOptional.get());
+        }
+
+        prontuario.setReceituario(prontuarioRequestDTO.receituario);
+        prontuario.setDiagnostico(prontuarioRequestDTO.diagnostico);
 
         prontuario = prontuarioRepository.save(prontuario);
 
-        ProntuarioResponseDTO prontuarioResponseDTO = new ProntuarioResponseDTO(prontuario);
 
-        return prontuarioResponseDTO;
+        return ResponseEntity.status(HttpStatus.CREATED).body( new ProntuarioResponseDTO(prontuario));
     }
     @Transactional
     public Object update(Long id, ProntuarioRequestDTO prontuarioRequestDTO) {
