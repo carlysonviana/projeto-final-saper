@@ -18,7 +18,7 @@ public class PlanoDeSaude {
 
     private String descricao;
 
-    @OneToMany(mappedBy = "planoDeSaude", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "planoDeSaude")
     Set<Paciente> pacientes;
     
     public PlanoDeSaude() {
