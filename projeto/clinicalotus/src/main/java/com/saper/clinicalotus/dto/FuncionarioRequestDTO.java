@@ -16,6 +16,9 @@ public class FuncionarioRequestDTO {
     public String email;
     public String telefone;
     public String celular;
+
+    public String login;
+    public String senha;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
     public LocalDate dataNascimento;

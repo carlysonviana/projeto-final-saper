@@ -11,7 +11,6 @@ import com.saper.clinicalotus.dto.CategoriaFuncionarioRequestDTO;
 import com.saper.clinicalotus.dto.CategoriaFuncionarioResponseDTO;
 import com.saper.clinicalotus.model.CategoriaFuncionario;
 import com.saper.clinicalotus.repository.CategoriaFuncionarioRepository;
-
 import jakarta.transaction.Transactional;
 
 @Service
