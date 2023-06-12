@@ -1,22 +1,18 @@
 package com.saper.clinicalotus.model;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Set;
 
 import com.saper.clinicalotus.dto.FuncionarioRequestDTO;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.*;
 
 @Entity
-public class Funcionario {
+public class Funcionario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +29,15 @@ public class Funcionario {
     @Column(nullable = false)
     private String nome;
     private String email;
+
+    @Column(
+            nullable = false,
+            unique = true
+    )
+    private String login;
+
+    @Column(nullable = false)
+    private String senha;
     private LocalDate dataNascimento;
     private String telefone;
     private String celular;
@@ -50,6 +55,14 @@ public class Funcionario {
     @PrimaryKeyJoinColumn
     private Medico medico;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "funcionario_role",
+        joinColumns = @JoinColumn(name = "funcionario_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    Set<Role> roles;
+
     public Funcionario(){
 
     }
@@ -58,6 +71,8 @@ public class Funcionario {
         this.nome = funcionarioRequestDTO.nome;
         this.cpf = funcionarioRequestDTO.cpf;
         this.email = funcionarioRequestDTO.email;
+        this.login = funcionarioRequestDTO.login;
+        this.senha = new BCryptPasswordEncoder().encode(funcionarioRequestDTO.senha);
         this.dataNascimento = funcionarioRequestDTO.dataNascimento;
         this.telefone = funcionarioRequestDTO.telefone;
         this.celular = funcionarioRequestDTO.celular;
@@ -152,6 +167,22 @@ public class Funcionario {
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
     
     @Override
     public int hashCode() {
@@ -181,6 +212,41 @@ public class Funcionario {
                 return false;
         } else if (!dataAdmissao.equals(other.dataAdmissao))
             return false;
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+
+    @Override
+    public String getPassword() {
+        return senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
         return true;
     }
 }
