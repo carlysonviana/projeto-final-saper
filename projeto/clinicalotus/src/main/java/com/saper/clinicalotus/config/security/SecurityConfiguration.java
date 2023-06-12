@@ -7,20 +7,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.httpBasic();
-        http.authorizeHttpRequests()
+        http.httpBasic(withDefaults());
+        http.authorizeHttpRequests( (authz)->authz
                 .requestMatchers(HttpMethod.POST, "/funcionario").permitAll()
                 .requestMatchers(HttpMethod.GET, "/paciente/**").hasAnyRole("MEDICO", "RECEPCIONISTA", "ADMIN")
                 .requestMatchers("/paciente/**").hasAnyRole("RECEPCIONISTA", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/funcionario/medico").hasAnyRole("RECEPCIONISTA", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/**").hasAnyRole("ADMIN", "RECEPCIONISTA", "ADMIN")
-                .anyRequest().hasRole("ADMIN");
-        http.csrf().disable();
+                .requestMatchers(HttpMethod.DELETE, "/**").hasAnyRole( "RECEPCIONISTA", "ADMIN")
+                .anyRequest().hasRole("ADMIN"));
+        http.csrf((csrf) -> csrf.disable());
 
         return http.build();
     }
