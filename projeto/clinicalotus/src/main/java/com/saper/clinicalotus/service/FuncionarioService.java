@@ -4,6 +4,7 @@ import com.saper.clinicalotus.dto.FuncionarioResponseDTO;
 import com.saper.clinicalotus.enums.RoleNames;
 import com.saper.clinicalotus.model.CategoriaFuncionario;
 import com.saper.clinicalotus.model.Funcionario;
+import com.saper.clinicalotus.model.Medico;
 import com.saper.clinicalotus.model.Role;
 import com.saper.clinicalotus.repository.CategoriaFuncionarioRepository;
 import com.saper.clinicalotus.repository.FuncionarioRepository;
@@ -45,9 +46,13 @@ public class FuncionarioService {
 
         if (categorOptional.get().getNome().equals("Médico")) {
             setRoleAsMedico(funcionario);
+            Medico medico = new Medico();
+            medico.setFuncionario(funcionario);
+            medicoRepository.save(medico);
         } else if (categorOptional.get().getNome().equals("Recepcionista")) {
             setRoleAsRecepcionista(funcionario);
         }
+
 
         FuncionarioResponseDTO funcionarioResponseDTO = new FuncionarioResponseDTO(funcionario);
 
