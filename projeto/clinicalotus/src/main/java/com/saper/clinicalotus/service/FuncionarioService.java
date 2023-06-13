@@ -1,19 +1,24 @@
 package com.saper.clinicalotus.service;
 import com.saper.clinicalotus.dto.FuncionarioRequestDTO;
 import com.saper.clinicalotus.dto.FuncionarioResponseDTO;
+import com.saper.clinicalotus.enums.RoleNames;
 import com.saper.clinicalotus.model.CategoriaFuncionario;
 import com.saper.clinicalotus.model.Funcionario;
-import com.saper.clinicalotus.model.Medico;
+import com.saper.clinicalotus.model.Role;
 import com.saper.clinicalotus.repository.CategoriaFuncionarioRepository;
 import com.saper.clinicalotus.repository.FuncionarioRepository;
 import com.saper.clinicalotus.repository.MedicoRepository;
 
+import com.saper.clinicalotus.repository.RoleRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class FuncionarioService {
@@ -26,6 +31,9 @@ public class FuncionarioService {
     @Autowired
     CategoriaFuncionarioRepository categoriaFuncionarioRepository;
 
+    @Autowired
+    RoleRepository roleRepository;
+
     @Transactional
     public Object save(FuncionarioRequestDTO funcionarioRequestDTO){
         Funcionario funcionario = new Funcionario(funcionarioRequestDTO);
@@ -35,15 +43,29 @@ public class FuncionarioService {
         funcionario.setCategoriaFuncionario(categorOptional.get());
         funcionario = funcionarioRepository.save(funcionario);
 
-        if (categorOptional.get().getNome().equals("Médico")){
-            Medico medico = new Medico();
-            medico.setFuncionario(funcionario);
-            medicoRepository.save(medico);
+        if (categorOptional.get().getNome().equals("Médico")) {
+            setRoleAsMedico(funcionario);
+        } else if (categorOptional.get().getNome().equals("Recepcionista")) {
+            setRoleAsRecepcionista(funcionario);
         }
 
         FuncionarioResponseDTO funcionarioResponseDTO = new FuncionarioResponseDTO(funcionario);
 
         return funcionarioResponseDTO;
+    }
+
+    public void setRoleAsMedico(Funcionario funcionario) {
+        Optional<Role> optionalRole = roleRepository.findByRole(RoleNames.ROLE_MEDICO);
+        Set<Role> setRole = new HashSet<>();
+        setRole.add(optionalRole.get());
+        funcionario.setRoles(setRole);
+    }
+
+    public void setRoleAsRecepcionista(Funcionario funcionario) {
+        Optional<Role> optionalRole = roleRepository.findByRole(RoleNames.ROLE_RECEPCIONISTA);
+        Set<Role> setRole = new HashSet<>();
+        setRole.add(optionalRole.get());
+        funcionario.setRoles(setRole);
     }
 
     public Object getAll(){
@@ -97,3 +119,4 @@ public class FuncionarioService {
         }
     }
 }
+
