@@ -22,6 +22,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/my/**").hasAnyRole("RECEPCIONISTA", "ADMIN","MEDICO")
                 .requestMatchers(HttpMethod.GET, "/funcionario/medico").hasAnyRole("RECEPCIONISTA", "ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/**").hasAnyRole( "RECEPCIONISTA", "ADMIN")
+                .requestMatchers( "/**").hasAnyRole( "ADMIN")
                 .anyRequest().hasRole("ADMIN"));
         http.csrf((csrf) -> csrf.disable());
 
