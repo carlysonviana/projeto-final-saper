@@ -183,6 +183,8 @@ public class Funcionario implements UserDetails {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+    public void setRoles(Set<Role>roles) { this.roles = roles; }
     
     @Override
     public int hashCode() {

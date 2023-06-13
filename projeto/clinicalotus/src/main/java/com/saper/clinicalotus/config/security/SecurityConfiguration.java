@@ -19,6 +19,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.POST, "/funcionario").permitAll()
                 .requestMatchers(HttpMethod.GET, "/paciente/**").hasAnyRole("MEDICO", "RECEPCIONISTA", "ADMIN")
                 .requestMatchers("/paciente/**").hasAnyRole("RECEPCIONISTA", "ADMIN")
+                .requestMatchers("/my/**").hasAnyRole("RECEPCIONISTA", "ADMIN","MEDICO")
                 .requestMatchers(HttpMethod.GET, "/funcionario/medico").hasAnyRole("RECEPCIONISTA", "ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/**").hasAnyRole( "RECEPCIONISTA", "ADMIN")
                 .anyRequest().hasRole("ADMIN"));
