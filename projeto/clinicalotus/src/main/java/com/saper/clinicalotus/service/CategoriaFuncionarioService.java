@@ -1,7 +1,9 @@
 package com.saper.clinicalotus.service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import com.saper.clinicalotus.exception.exceptions.ConflictStoreException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,12 @@ public class CategoriaFuncionarioService {
         categoriaFuncionario.setNome(categoriaFuncionarioRequestDTO.nome);
         categoriaFuncionario.setDescricao(categoriaFuncionarioRequestDTO.descricao);
 
-        categoriaFuncionarioRepository.save(categoriaFuncionario);
+        try {
+            categoriaFuncionarioRepository.save(categoriaFuncionario);
+        }catch (Exception exception){
+            throw  new ConflictStoreException("Não foi possível salvar a categoria");
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(new CategoriaFuncionarioResponseDTO(categoriaFuncionario));
     }
 
@@ -36,22 +43,14 @@ public class CategoriaFuncionarioService {
     }
     
     public ResponseEntity<Object> findById(Long id) {
-        Optional<CategoriaFuncionario> categoriaFuncionarioOptional = categoriaFuncionarioRepository.findById(id);
+        CategoriaFuncionario categoriaFuncionario = categoriaFuncionarioRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Categoria não encontrada"));
 
-        if(categoriaFuncionarioOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoria não encontrada!");
-        }else{
-            return ResponseEntity.status(HttpStatus.OK).body(new CategoriaFuncionarioResponseDTO(categoriaFuncionarioOptional.get()));
-        }
+            return ResponseEntity.status(HttpStatus.OK).body(new CategoriaFuncionarioResponseDTO(categoriaFuncionario));
+
     }
     @Transactional
     public Object update(Long id, CategoriaFuncionarioRequestDTO categoriaFuncionarioRequestDTO) {
-        Optional<CategoriaFuncionario> categoriaFuncionarioOptional = categoriaFuncionarioRepository.findById(id);
-
-        if(categoriaFuncionarioOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoria não encontrada!");
-        }else{
-            CategoriaFuncionario categoriaFuncionario = categoriaFuncionarioOptional.get();
+        CategoriaFuncionario categoriaFuncionario = categoriaFuncionarioRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Categoria não encontrada"));
 
             if(categoriaFuncionarioRequestDTO.nome != null){
                 categoriaFuncionario.setNome(categoriaFuncionarioRequestDTO.nome);
@@ -67,16 +66,18 @@ public class CategoriaFuncionarioService {
 
             return ResponseEntity.status(HttpStatus.OK).body(new CategoriaFuncionarioResponseDTO(categoriaFuncionarioRepository.save(categoriaFuncionario)));
         }
-    }
+
 
     public ResponseEntity<Object> delete(Long id) {
-        Optional<CategoriaFuncionario> categoriaFuncionarioOptional = categoriaFuncionarioRepository.findById(id);
+        CategoriaFuncionario categoriaFuncionario = categoriaFuncionarioRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Categoria não encontrada"));
 
-        if(categoriaFuncionarioOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoria não encontrada!");
-        }else{
-            categoriaFuncionarioRepository.delete(categoriaFuncionarioOptional.get());
+        try {
+            categoriaFuncionarioRepository.delete(categoriaFuncionario);
+        }catch (Exception exception){
+            throw  new ConflictStoreException("Não foi possível deletar categoria");
+        }
+
             return ResponseEntity.status(HttpStatus.OK).build();
         }
     }
-}
+

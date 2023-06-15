@@ -1,6 +1,7 @@
 package com.saper.clinicalotus.controller;
 import com.saper.clinicalotus.dto.HorarioAtendimentoRequestDTO;
 import com.saper.clinicalotus.service.HorarioAtendimentoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,14 +22,14 @@ public class HorarioAtendimentoController {
     }
 
     @PostMapping
-    public Object save(@RequestBody HorarioAtendimentoRequestDTO horarioAtendimentoRequestDTO){
+    public Object save(@Valid @RequestBody HorarioAtendimentoRequestDTO horarioAtendimentoRequestDTO){
 
         return horarioAtendimentoService.save(horarioAtendimentoRequestDTO);
     }
 
     @PutMapping("/{id}")
     public Object update(@PathVariable(name = "id") Long id,
-                         @RequestBody HorarioAtendimentoRequestDTO horarioAtendimentoRequestDTO){
+                         @Valid @RequestBody HorarioAtendimentoRequestDTO horarioAtendimentoRequestDTO){
 
         return horarioAtendimentoService.update(id, horarioAtendimentoRequestDTO);
     }

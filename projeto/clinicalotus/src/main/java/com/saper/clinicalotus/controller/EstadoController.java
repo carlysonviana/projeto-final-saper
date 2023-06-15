@@ -2,6 +2,7 @@ package com.saper.clinicalotus.controller;
 
 import com.saper.clinicalotus.dto.EstadoRequestDTO;
 import com.saper.clinicalotus.service.EstadoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +23,12 @@ public class EstadoController {
     }
 
     @PostMapping
-    public Object save(@RequestBody EstadoRequestDTO estadoRequestDTO){
+    public Object save(@Valid @RequestBody EstadoRequestDTO estadoRequestDTO){
         return estadoService.save(estadoRequestDTO);
     }
 
     @PutMapping("/{id}")
-    public Object update(@PathVariable(name = "id") Long id,
+    public Object update(@PathVariable(name = "id") Long id,@Valid
                          @RequestBody EstadoRequestDTO estadoRequestDTO){
         return estadoService.update(id, estadoRequestDTO);
     }

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,14 +22,9 @@ public class PlanoDeSaudeService {
     PlanoDeSaudeRepository planoDeSaudeRepository;
 
     public ResponseEntity<Object> findById(Long id) {
-        Optional<PlanoDeSaude> planoDeSaudeOptional = planoDeSaudeRepository.findById(id);
+        PlanoDeSaude planoDeSaude = planoDeSaudeRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Plano não encontrado!"));
 
-        if(planoDeSaudeOptional.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Plano de Saúde não  encontrado!");
-        else{
-            return ResponseEntity.status(HttpStatus.OK).body( new PlanoDeSaudeResponseDTO(planoDeSaudeOptional.get()));
-        }
-
+            return ResponseEntity.status(HttpStatus.OK).body( new PlanoDeSaudeResponseDTO(planoDeSaude));
     }
 
     public Object getAll() {
@@ -47,12 +44,7 @@ public class PlanoDeSaudeService {
 
     @Transactional
     public Object update(Long id, PlanoDeSaudeRequestDTO planoDeSaudeRequestDTO) {
-        Optional<PlanoDeSaude> planoDeSaudeOptional = planoDeSaudeRepository.findById(id);
-
-        if(planoDeSaudeOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Plano de Saúde não encontrado!");
-        }else{
-            PlanoDeSaude planoDeSaude = planoDeSaudeOptional.get();
+        PlanoDeSaude planoDeSaude = planoDeSaudeRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Plano não encontrado!"));
 
             if(planoDeSaudeRequestDTO.nome != null){
                 planoDeSaude.setNome(planoDeSaudeRequestDTO.nome);
@@ -61,22 +53,19 @@ public class PlanoDeSaudeService {
                 planoDeSaude.setDescricao(planoDeSaudeRequestDTO.descricao);
             }
             return ResponseEntity.status(HttpStatus.OK).body(new PlanoDeSaudeResponseDTO(planoDeSaudeRepository.save(planoDeSaude)));
-        }
+
     }
 
     public ResponseEntity<Object> delete(Long id) {
 
-        Optional<PlanoDeSaude> planoDeSaudeOptional = planoDeSaudeRepository.findById(id);
+        PlanoDeSaude planoDeSaude = planoDeSaudeRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Plano não encontrado!"));
 
-        if(planoDeSaudeOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Plano de Saúde não encontrado!");
-        }else{
-            Set<Paciente> pacientes = planoDeSaudeOptional.get().getPacientes();
+            Set<Paciente> pacientes = planoDeSaude.getPacientes();
             for(Paciente paciente: pacientes){
                 paciente.setPlanoDeSaude(null);
             }
-            planoDeSaudeRepository.delete(planoDeSaudeOptional.get());
+            planoDeSaudeRepository.delete(planoDeSaude);
             return ResponseEntity.status(HttpStatus.OK).build();
-        }
+
     }
 }

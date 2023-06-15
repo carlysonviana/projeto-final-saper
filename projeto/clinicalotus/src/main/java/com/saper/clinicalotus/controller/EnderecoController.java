@@ -2,6 +2,7 @@ package com.saper.clinicalotus.controller;
 
 import com.saper.clinicalotus.dto.EnderecoRequestDTO;
 import com.saper.clinicalotus.service.EnderecoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +23,12 @@ public class EnderecoController {
     }
 
     @PostMapping
-    public Object save(@RequestBody EnderecoRequestDTO enderecoRequestDTO){
+    public Object save(@Valid @RequestBody EnderecoRequestDTO enderecoRequestDTO){
         return enderecoService.save(enderecoRequestDTO);
     }
 
     @PutMapping("/{id}")
-    public Object update(@PathVariable(name = "id") Long id,
+    public Object update(@PathVariable(name = "id") Long id,@Valid
                          @RequestBody EnderecoRequestDTO enderecoRequestDTO){
         return enderecoService.update(id, enderecoRequestDTO);
     }

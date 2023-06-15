@@ -1,6 +1,7 @@
 package com.saper.clinicalotus.service;
 import com.saper.clinicalotus.dto.EnderecoRequestDTO;
 import com.saper.clinicalotus.dto.EnderecoResponseDTO;
+import com.saper.clinicalotus.exception.exceptions.ConflictStoreException;
 import com.saper.clinicalotus.model.Cidade;
 import com.saper.clinicalotus.model.Endereco;
 import com.saper.clinicalotus.repository.CidadeRepository;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -24,11 +26,7 @@ public class EnderecoService {
     @Transactional
     public ResponseEntity<Object> save(EnderecoRequestDTO enderecoRequestDTO){
 
-        Optional<Cidade> optionalCidade = cidadeRepository.findById(enderecoRequestDTO.cidade.getId());
-
-        if(optionalCidade.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estado não encontrado!");
-        }
+        Cidade cidade = cidadeRepository.findById(enderecoRequestDTO.cidade.getId()).orElseThrow(()-> new NoSuchElementException("Cidade não encontrado!"));
 
         Endereco endereco = new Endereco();
         endereco.setLogradouro(enderecoRequestDTO.logradouro);
@@ -36,9 +34,14 @@ public class EnderecoService {
         endereco.setBairro(enderecoRequestDTO.bairro);
         endereco.setCep(enderecoRequestDTO.cep);
         endereco.setComplemento(enderecoRequestDTO.complemento);
-        endereco.setCidade(optionalCidade.get());
+        endereco.setCidade(cidade);
 
-        enderecoRepository.save(endereco);
+        try {
+            enderecoRepository.save(endereco);
+        }catch (Exception exception){
+            throw  new ConflictStoreException("Não foi possivel salvar endereço!");
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(new EnderecoResponseDTO(endereco));
     }
 
@@ -48,22 +51,13 @@ public class EnderecoService {
     }
 
     public ResponseEntity<Object> findById(Long id) {
-        Optional<Endereco> enderecoOptional = enderecoRepository.findById(id);
+        Endereco endereco = enderecoRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Endereço não encontrado!"));
 
-        if(enderecoOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereco não encontrado!");
-        }else{
-            return ResponseEntity.status(HttpStatus.OK).body(new EnderecoResponseDTO(enderecoOptional.get()));
-        }
+            return ResponseEntity.status(HttpStatus.OK).body(new EnderecoResponseDTO(endereco));
     }
     @Transactional
     public Object update(Long id, EnderecoRequestDTO enderecoRequestDTO) {
-        Optional<Endereco> enderecoOptional = enderecoRepository.findById(id);
-
-        if(enderecoOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereco não encontrado!");
-        }else{
-            Endereco endereco = enderecoOptional.get();
+        Endereco endereco = enderecoRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Endereço não encontrado!"));
 
             if(enderecoRequestDTO.logradouro != null){
                 endereco.setLogradouro(enderecoRequestDTO.logradouro);
@@ -86,17 +80,18 @@ public class EnderecoService {
             }
 
             return ResponseEntity.status(HttpStatus.OK).body(new EnderecoResponseDTO(enderecoRepository.save(endereco)));
-        }
+
     }
 
     public ResponseEntity<Object> delete(Long id) {
-        Optional<Endereco> enderecoOptional = enderecoRepository.findById(id);
+        Endereco endereco = enderecoRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Endereço não encontrado!"));
 
-        if(enderecoOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereco não encontrado!");
-        }else{
-            enderecoRepository.delete(enderecoOptional.get());
-            return ResponseEntity.status(HttpStatus.OK).build();
+        try {
+            enderecoRepository.delete(endereco);
+        }catch (Exception exception){
+            throw  new ConflictStoreException("Não foi possivel deletar endereço");
         }
+            return ResponseEntity.status(HttpStatus.OK).build();
+
     }
 }

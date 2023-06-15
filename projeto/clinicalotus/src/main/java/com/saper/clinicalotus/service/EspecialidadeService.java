@@ -1,7 +1,9 @@
 package com.saper.clinicalotus.service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import com.saper.clinicalotus.exception.exceptions.ConflictStoreException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,12 @@ public class EspecialidadeService {
         especialidade.setNome(especialidadeRequestDTO.nome);
         especialidade.setDescricao(especialidadeRequestDTO.descricao);
 
-        especialidadeRepository.save(especialidade);
+        try {
+            especialidadeRepository.save(especialidade);
+        }catch (Exception exception){
+            throw  new ConflictStoreException("Não foi possivel salvar sua especialidade!");
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(new EspecialidadeResponseDTO(especialidade));
     }
 
@@ -37,22 +44,13 @@ public class EspecialidadeService {
     }
     
     public ResponseEntity<Object> findById(Long id) {
-        Optional<Especialidade> especialidadeOptional = especialidadeRepository.findById(id);
+        Especialidade especialidade = especialidadeRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Especialidade não encontrada!"));
 
-        if(especialidadeOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Especialidade não encontrada!");
-        }else{
-            return ResponseEntity.status(HttpStatus.OK).body(new EspecialidadeResponseDTO(especialidadeOptional.get()));
-        }
+            return ResponseEntity.status(HttpStatus.OK).body(new EspecialidadeResponseDTO(especialidade));
     }
     @Transactional
     public Object update(Long id, EspecialidadeRequestDTO especialidadeRequestDTO) {
-        Optional<Especialidade> especialidadeOptional = especialidadeRepository.findById(id);
-
-        if(especialidadeOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Especialidade não encontrada!");
-        }else{
-            Especialidade especialidade = especialidadeOptional.get();
+        Especialidade especialidade = especialidadeRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Especialidade não encontrada!"));
 
             if(especialidadeRequestDTO.nome != null){
                 especialidade.setNome(especialidadeRequestDTO.nome);
@@ -63,18 +61,18 @@ public class EspecialidadeService {
             }
 
             return ResponseEntity.status(HttpStatus.OK).body(new EspecialidadeResponseDTO(especialidadeRepository.save(especialidade)));
-        }
     }
 
     public ResponseEntity<Object> delete(Long id) {
-        Optional<Especialidade> especialidadeOptional = especialidadeRepository.findById(id);
+        Especialidade especialidade = especialidadeRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Especialidade não encontrada!"));
 
-        if(especialidadeOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Especialidade não encontrada!");
-        }else{
-            especialidadeRepository.delete(especialidadeOptional.get());
+            try {
+                especialidadeRepository.delete(especialidade);
+            }catch (Exception exception){
+                throw  new ConflictStoreException("Não foi possivel deletar a especialidade!");
+            }
             return ResponseEntity.status(HttpStatus.OK).build();
-        }
+
     }
     
 }

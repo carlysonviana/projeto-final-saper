@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -32,19 +33,19 @@ public class PacienteService {
 
     @Transactional
     public Object save(PacienteRequestDTO pacienteRequestDTO){
-        Optional<Endereco> optionalEndereco;
-        Optional<PlanoDeSaude> optionalPlanoDeSaude;
+        Endereco endereco;
+        PlanoDeSaude planoDeSaude;
 
         Paciente paciente = new Paciente();
 
         if(pacienteRequestDTO.endereco_id != null){
-            optionalEndereco = enderecoRepository.findById(pacienteRequestDTO.endereco_id);
-            paciente.setEndereco(optionalEndereco.get());
+            endereco = enderecoRepository.findById(pacienteRequestDTO.endereco_id).orElseThrow(()-> new NoSuchElementException("Endereco não encontrado!"));
+            paciente.setEndereco(endereco);
         }
 
         if(pacienteRequestDTO.plano_id != null){
-            optionalPlanoDeSaude = planoDeSaudeRepository.findById(pacienteRequestDTO.plano_id);
-            paciente.setPlanoDeSaude(optionalPlanoDeSaude.get());
+            planoDeSaude = planoDeSaudeRepository.findById(pacienteRequestDTO.plano_id).orElseThrow(()-> new NoSuchElementException("Plano não encontrado!"));
+            paciente.setPlanoDeSaude(planoDeSaude);
         }
 
         paciente.setCpf(pacienteRequestDTO.cpf);
@@ -57,23 +58,15 @@ public class PacienteService {
     }
 
     public ResponseEntity<Object> findById(Long id) {
-        Optional<Paciente> pacienteOptional = pacienteRepository.findById(id);
+        Paciente paciente = pacienteRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Paciente não encontrado!"));
 
-        if(pacienteOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Paciente não encontrado");
-        }else{
-            return ResponseEntity.status(HttpStatus.OK).body(new PacienteResponseDTO(pacienteOptional.get()));
-        }
+            return ResponseEntity.status(HttpStatus.OK).body(new PacienteResponseDTO(paciente));
+
     }
 
     @Transactional
     public Object update(Long id, PacienteRequestDTO pacienteRequestDTO) {
-        Optional<Paciente> pacienteOptional = pacienteRepository.findById(id);
-
-        if(pacienteOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Paciente não encontrado!");
-        }else{
-            Paciente paciente = pacienteOptional.get();
+        Paciente paciente = pacienteRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Paciente não encontrado!"));
 
             if(pacienteRequestDTO.nome != null){
                 paciente.setNome(pacienteRequestDTO.nome);
@@ -85,18 +78,13 @@ public class PacienteService {
                 paciente.setDataNascimento(pacienteRequestDTO.dataNascimento);
             }
             return ResponseEntity.status(HttpStatus.OK).body(new PacienteResponseDTO(pacienteRepository.save(paciente)));
-        }
     }
 
     public ResponseEntity<Object> delete(Long id) {
-        Optional<Paciente> pacienteOptional = pacienteRepository.findById(id);
+        Paciente paciente = pacienteRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Paciente não encontrado!"));
 
-        if(pacienteOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Paciente não encontrado!");
-        }else{
-            pacienteRepository.delete(pacienteOptional.get());
+            pacienteRepository.delete(paciente);
             return ResponseEntity.status(HttpStatus.OK).build();
-        }
     }
 
     public ResponseEntity<Object> getAllByParameters(Long pacienteId, String nome, String cpf, String email, LocalDate dataNascimento, Long enderecoId) {

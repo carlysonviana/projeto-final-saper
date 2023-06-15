@@ -2,6 +2,7 @@ package com.saper.clinicalotus.controller;
 
 import com.saper.clinicalotus.dto.FilaRequestDTO;
 import com.saper.clinicalotus.service.FilaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +24,12 @@ public class FilaController {
     }
 
     @PostMapping
-    public Object save(@RequestBody FilaRequestDTO filaRequestDTO){
+    public Object save(@Valid @RequestBody FilaRequestDTO filaRequestDTO){
         return filaService.save(filaRequestDTO);
     }
 
     @PutMapping("/{id}")
-    public Object update(@PathVariable(name = "id") Long id, @RequestBody FilaRequestDTO filaRequestDTO){
+    public Object update(@PathVariable(name = "id") Long id, @Valid @RequestBody FilaRequestDTO filaRequestDTO){
 
         return filaService.update(id, filaRequestDTO);
     }

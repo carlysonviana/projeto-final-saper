@@ -11,6 +11,7 @@ public class MedicoResponseDTO {
     public MedicoResponseDTO(Medico medico) {
         this.funcionario_id = medico.getFuncionario().getId();
         this.crm = medico.getCrm();
+        this.especialidade_id = medico.getEspecialidade().getId();
     }
     
 }
