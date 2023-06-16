@@ -37,6 +37,7 @@ public class FuncionarioResponseDTO {
         this.celular = funcionario.getCelular();
         this.dataNascimento = funcionario.getDataNascimento();
         this.dataAdmissao = funcionario.getDataAdmissao();
+        this.endereco_id = funcionario.getEndereco().getId();
         this.categoriaFuncionario_id = funcionario.getCategoriaFuncionario().getId();
     }
 }

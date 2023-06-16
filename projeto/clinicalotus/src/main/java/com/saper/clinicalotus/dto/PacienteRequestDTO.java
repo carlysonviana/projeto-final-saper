@@ -11,7 +11,8 @@ import java.time.LocalDate;
 
 public class PacienteRequestDTO {
 
-    @NotBlank(message = "cpf do funcionario não pode está em branco ou vazio.")@Size(min = 11,max = 14)
+    @NotBlank(message = "cpf do funcionario não pode está em branco ou vazio.")
+    @Size(min = 11,max = 14)
     public String cpf;
 
     @NotBlank(message = "Nome do paciente não pode ser nulo ou vazio.")
