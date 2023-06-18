@@ -11,4 +11,5 @@ public class ConsultaRequestDTO {
     public LocalDateTime dataHora;
     public boolean autorizacaoPlano;
     public Long paciente_id;
+    public Long medico_id;
 }

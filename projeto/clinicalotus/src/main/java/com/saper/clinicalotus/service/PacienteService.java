@@ -84,6 +84,11 @@ public class PacienteService {
             if(pacienteRequestDTO.dataNascimento != null){
                 paciente.setDataNascimento(pacienteRequestDTO.dataNascimento);
             }
+            if(pacienteRequestDTO.plano_id != null){
+                Optional<PlanoDeSaude> planoDeSaudeOptional = planoDeSaudeRepository.findById(pacienteRequestDTO.plano_id);
+                paciente.setPlanoDeSaude(planoDeSaudeOptional.get());
+            }
+            
             return ResponseEntity.status(HttpStatus.OK).body(new PacienteResponseDTO(pacienteRepository.save(paciente)));
         }
     }

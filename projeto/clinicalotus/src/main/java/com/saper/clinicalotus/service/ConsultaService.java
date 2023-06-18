@@ -3,8 +3,10 @@ package com.saper.clinicalotus.service;
 import com.saper.clinicalotus.dto.ConsultaRequestDTO;
 import com.saper.clinicalotus.dto.ConsultaResponseDTO;
 import com.saper.clinicalotus.model.Consulta;
+import com.saper.clinicalotus.model.Medico;
 import com.saper.clinicalotus.model.Paciente;
 import com.saper.clinicalotus.repository.ConsultaRepository;
+import com.saper.clinicalotus.repository.MedicoRepository;
 import com.saper.clinicalotus.repository.PacienteRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ public class ConsultaService {
     ConsultaRepository consultaRepository;
     @Autowired
     PacienteRepository pacienteRepository;
+    @Autowired
+    MedicoRepository medicoRepository;
     @Transactional
     public ResponseEntity<Object> save(ConsultaRequestDTO consultaRequestDTO) {
         //Verifcar se paciente existe
@@ -31,10 +35,18 @@ public class ConsultaService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Paciente não encontrado!");
         }
 
+        //Verifcar se medico existe
+        Optional<Medico> optionalMedico = medicoRepository.findById(consultaRequestDTO.medico_id);
+
+        if(optionalMedico.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Medico não encontrado!");
+        }
+
         Consulta consulta = new Consulta();
         consulta.setDataHora(consultaRequestDTO.dataHora);
         consulta.setAutorizacaoPlano(consultaRequestDTO.autorizacaoPlano);
         consulta.setPaciente(optionalPaciente.get());
+        consulta.setMedico(optionalMedico.get());
 
         consultaRepository.save(consulta);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ConsultaResponseDTO(consulta));

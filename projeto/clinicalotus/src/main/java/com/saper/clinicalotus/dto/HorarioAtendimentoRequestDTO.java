@@ -10,4 +10,5 @@ public class HorarioAtendimentoRequestDTO {
     public LocalTime horarioInicio;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     public LocalTime horarioFim;
+    public Long medico_id;
 }

@@ -1,10 +1,14 @@
 package com.saper.clinicalotus.model;
 
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -21,6 +25,12 @@ public class Medico {
     @ManyToOne(optional = true)
     @JoinColumn(name = "especialidade_id", nullable = true)
     private Especialidade especialidade;
+
+    @OneToMany(mappedBy = "medico", cascade = CascadeType.ALL)
+    Set<Consulta> consultas;
+
+    @OneToMany(mappedBy = "medico", cascade = CascadeType.ALL)
+    Set<HorarioAtendimento> horarioAtendimentos;
 
     public Medico(){
 
@@ -55,5 +65,20 @@ public class Medico {
     public void setEspecialidade(Especialidade especialidade) {
         this.especialidade = especialidade;
     }
-    
+
+    public Set<Consulta> getConsultas() {
+        return consultas;
+    }
+
+    public void setConsultas(Set<Consulta> consultas) {
+        this.consultas = consultas;
+    }
+
+    public Set<HorarioAtendimento> getHorarioAtendimentos() {
+        return horarioAtendimentos;
+    }
+
+    public void setHorarioAtendimentos(Set<HorarioAtendimento> horarioAtendimentos) {
+        this.horarioAtendimentos = horarioAtendimentos;
+    }
 }
