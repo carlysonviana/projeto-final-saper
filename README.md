@@ -5,7 +5,6 @@ Repositório destinado ao Projeto Final do Curso de Desenvolvimento Web - SAPER
 
 ### Membros da equipe:
 - Carlyson Viana Alencar Silva
-- Levi Queiroz De Holanda Ribeiro
 - Angélica Alves Viana
 - Darlan Almeida Barroso
 - José Galba Dutra Junior
