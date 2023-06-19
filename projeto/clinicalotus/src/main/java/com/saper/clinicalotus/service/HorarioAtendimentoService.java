@@ -2,7 +2,10 @@ package com.saper.clinicalotus.service;
 import com.saper.clinicalotus.dto.HorarioAtendimentoRequestDTO;
 import com.saper.clinicalotus.dto.HorarioAtendimentoResponseDTO;
 import com.saper.clinicalotus.model.HorarioAtendimento;
+import com.saper.clinicalotus.model.Medico;
 import com.saper.clinicalotus.repository.HorarioAtendimentoRepository;
+import com.saper.clinicalotus.repository.MedicoRepository;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,9 @@ public class HorarioAtendimentoService {
     @Autowired
     HorarioAtendimentoRepository horarioAtendimentoRepository;
 
+    @Autowired
+    MedicoRepository medicoRepository;
+
     public Object getAll(){
         return horarioAtendimentoRepository.findAll().stream().map((horarioAtendimento -> new HorarioAtendimentoResponseDTO(horarioAtendimento)));
     }
@@ -27,6 +33,14 @@ public class HorarioAtendimentoService {
     public Object save(HorarioAtendimentoRequestDTO horarioAtendimentoRequestDTO){
         HorarioAtendimento horarioAtendimento = new HorarioAtendimento(horarioAtendimentoRequestDTO);
 
+        //Verifcar se medico existe
+        Optional<Medico> optionalMedico = medicoRepository.findById(horarioAtendimentoRequestDTO.medico_id);
+
+        if(optionalMedico.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Medico não encontrado!");
+        }
+
+        horarioAtendimento.setMedico(optionalMedico.get());
         horarioAtendimento = horarioAtendimentoRepository.save(horarioAtendimento);
 
         HorarioAtendimentoResponseDTO horarioAtendimentoResponseDTO = new HorarioAtendimentoResponseDTO(horarioAtendimento);

@@ -20,6 +20,10 @@ public class HorarioAtendimento {
     @Column(nullable = false)
     private LocalTime horarioFim;
 
+    @ManyToOne
+    @JoinColumn(name = "funcionario_id")
+    private Medico medico;
+
     public HorarioAtendimento() {
     }
     public HorarioAtendimento(HorarioAtendimentoRequestDTO horarioAtendimentoRequestDTO) {
@@ -58,5 +62,11 @@ public class HorarioAtendimento {
 
     public void setId(Long id) {
         Id = id;
+    }
+    public Medico getMedico() {
+        return medico;
+    }
+    public void setMedico(Medico medico) {
+        this.medico = medico;
     }
 }

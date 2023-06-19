@@ -23,14 +23,19 @@ public class Consulta {
     @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
+    @ManyToOne
+    @JoinColumn(name = "funcionario_id")
+    private Medico medico;
+
     public Consulta(){
     }
-    public Consulta(Long id, LocalDateTime dataHora, boolean autorizacaoPlano, Paciente paciente) {
+    public Consulta(Long id, LocalDateTime dataHora, boolean autorizacaoPlano, Paciente paciente, Medico medico) {
         this.id = id;
         this.dataHora = dataHora;
         this.confirmada = false;
         this.autorizacaoPlano = autorizacaoPlano;
         this.paciente = paciente;
+        this.medico = medico;
     }
 
     public Long getId() {
@@ -71,5 +76,11 @@ public class Consulta {
 
     public void setPaciente(Paciente paciente) {
         this.paciente = paciente;
+    }
+    public Medico getMedico() {
+        return medico;
+    }
+    public void setMedico(Medico medico) {
+        this.medico = medico;
     }
 }

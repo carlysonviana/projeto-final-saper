@@ -4,8 +4,10 @@ import com.saper.clinicalotus.dto.ConsultaRequestDTO;
 import com.saper.clinicalotus.dto.ConsultaResponseDTO;
 import com.saper.clinicalotus.exception.exceptions.ConflictStoreException;
 import com.saper.clinicalotus.model.Consulta;
+import com.saper.clinicalotus.model.Medico;
 import com.saper.clinicalotus.model.Paciente;
 import com.saper.clinicalotus.repository.ConsultaRepository;
+import com.saper.clinicalotus.repository.MedicoRepository;
 import com.saper.clinicalotus.repository.PacienteRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +26,22 @@ public class ConsultaService {
     ConsultaRepository consultaRepository;
     @Autowired
     PacienteRepository pacienteRepository;
+    @Autowired
+    MedicoRepository medicoRepository;
     @Transactional
     public ResponseEntity<Object> save(ConsultaRequestDTO consultaRequestDTO) {
         //Verifcar se paciente existe
         Paciente paciente = pacienteRepository.findById(consultaRequestDTO.paciente_id).orElseThrow(()-> new NoSuchElementException("Paciente não encontrado!"));
 
+        //Verifcar se medico existe
+        Medico medico = medicoRepository.findById(consultaRequestDTO.medico_id).orElseThrow(()-> new NoSuchElementException("Médico não encontrado!"));
+
         Consulta consulta = new Consulta();
         consulta.setDataHora(consultaRequestDTO.dataHora);
         consulta.setAutorizacaoPlano(consultaRequestDTO.autorizacaoPlano);
+
         consulta.setPaciente(paciente);
+        consulta.setMedico(medico);
 
         try {
             consultaRepository.save(consulta);
@@ -83,15 +92,15 @@ public class ConsultaService {
     public ResponseEntity<Object> delete(Long id) {
         Consulta consulta = consultaRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Consulta não encontrada"));
 
-            consultaRepository.delete(consulta);
-            return ResponseEntity.status(HttpStatus.OK).build();
+        consultaRepository.delete(consulta);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     public ResponseEntity<Object>  getAllByPaciente_Id(Long pacienteId) {
         return ResponseEntity.status(HttpStatus.OK).body(consultaRepository.findAllByPaciente_Id(pacienteId).stream().map((ConsultaResponseDTO::new)));
     }
 
-    public ResponseEntity<Object> getAllByParameters(Long consultaId, LocalDateTime dataHora, Boolean autorizacaoPlano, Boolean confirmada, Long pacienteId) {
-        return ResponseEntity.status(HttpStatus.OK).body(consultaRepository.findAllByParameters(consultaId, dataHora, autorizacaoPlano, confirmada, pacienteId).stream().map((ConsultaResponseDTO::new)));
+    public ResponseEntity<Object> getAllByParameters(Long consultaId, LocalDateTime dataHora, Boolean autorizacaoPlano, Boolean confirmada, Long pacienteId, Long medicoId) {
+        return ResponseEntity.status(HttpStatus.OK).body(consultaRepository.findAllByParameters(consultaId, dataHora, autorizacaoPlano, confirmada, pacienteId, medicoId).stream().map((ConsultaResponseDTO::new)));
     }
 }

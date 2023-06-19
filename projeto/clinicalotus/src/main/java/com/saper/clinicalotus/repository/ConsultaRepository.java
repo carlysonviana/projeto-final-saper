@@ -19,7 +19,8 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
             "and (:dataHora is null or c.dataHora = :dataHora) " +
             "and (:confirmada is null or c.confirmada = :confirmada) " +
             "and (:autorizacaoPlano is null or c.autorizacaoPlano = :autorizacaoPlano) "+
-            "and (:pacienteId is null or c.paciente.id = :pacienteId)")
-    List<Consulta> findAllByParameters(Long id, LocalDateTime dataHora, Boolean confirmada, Boolean autorizacaoPlano, Long pacienteId);
+            "and (:pacienteId is null or c.paciente.id = :pacienteId) "+
+            "and (:medicoId is null or c.medico.id = :medicoId)")
+    List<Consulta> findAllByParameters(Long id, LocalDateTime dataHora, Boolean confirmada, Boolean autorizacaoPlano, Long pacienteId, Long medicoId);
 
 }

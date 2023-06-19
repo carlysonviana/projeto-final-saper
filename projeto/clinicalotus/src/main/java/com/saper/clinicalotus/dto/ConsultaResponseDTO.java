@@ -14,6 +14,7 @@ public class ConsultaResponseDTO {
     public LocalDateTime dataHora;
     public boolean autorizacaoPlano;
     public Long paciente_id;
+    public Long medico_id;
     public boolean confirmada;
 
     public ConsultaResponseDTO(Consulta consulta) {
@@ -21,6 +22,7 @@ public class ConsultaResponseDTO {
         this.dataHora = consulta.getDataHora();
         this.autorizacaoPlano = consulta.isAutorizacaoPlano();
         this.paciente_id = consulta.getPaciente().getId();
+        this.medico_id = consulta.getMedico().getFuncionario().getId();
         this.confirmada = consulta.isConfirmada();
     }
 }

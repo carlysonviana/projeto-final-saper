@@ -21,8 +21,9 @@ public class ConsultaController {
                                      @RequestParam(required = false, name="dataHora") @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss") LocalDateTime dataHora,
                                      @RequestParam(required = false, name="confirmada") Boolean confirmada,
                                      @RequestParam(required = false, name="autorizacaoPlano") Boolean autorizacaoPlano,
-                                     @RequestParam(required = false, name="pacienteId") Long pacienteId){
-        return consultaService.getAllByParameters(consultaId, dataHora, confirmada, autorizacaoPlano, pacienteId);
+                                     @RequestParam(required = false, name="pacienteId") Long pacienteId,
+                                     @RequestParam(required = false, name="medicoId") Long medicoId){
+        return consultaService.getAllByParameters(consultaId, dataHora, confirmada, autorizacaoPlano, pacienteId, medicoId);
     }
     @GetMapping
     public Object getAll(){
