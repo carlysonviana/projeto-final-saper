@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.saper.clinicalotus.util.ConversorDiaDaSemana.converterParaIngles;
@@ -48,23 +49,14 @@ public class HorarioAtendimentoService {
     }
 
     public ResponseEntity<Object> findById(Long id) {
-        Optional<HorarioAtendimento> horarioAtendimentoOptional = horarioAtendimentoRepository.findById(id);
+        HorarioAtendimento horarioAtendimento = horarioAtendimentoRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Horário não encontrado!"));
 
-        if(horarioAtendimentoOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Horário não encontrado");
-        }else{
-            return ResponseEntity.status(HttpStatus.OK).body(new HorarioAtendimentoResponseDTO(horarioAtendimentoOptional.get()));
-        }
+            return ResponseEntity.status(HttpStatus.OK).body(new HorarioAtendimentoResponseDTO(horarioAtendimento));
     }
 
     @Transactional
     public Object update(Long id, HorarioAtendimentoRequestDTO horarioAtendimentoRequestDTO) {
-        Optional<HorarioAtendimento> horarioAtendimentoOptional = horarioAtendimentoRepository.findById(id);
-
-        if(horarioAtendimentoOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Horário não encontrado!");
-        }else{
-            HorarioAtendimento horarioAtendimento = horarioAtendimentoOptional.get();
+        HorarioAtendimento horarioAtendimento = horarioAtendimentoRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Horário não encontrado!"));
 
             if(horarioAtendimentoRequestDTO.diaDaSemana != null){
                 horarioAtendimento.setDiaDaSemana(converterParaIngles(horarioAtendimentoRequestDTO.diaDaSemana));
@@ -76,17 +68,12 @@ public class HorarioAtendimentoService {
                 horarioAtendimento.setHorarioFim(horarioAtendimentoRequestDTO.horarioFim);
             }
             return ResponseEntity.status(HttpStatus.OK).body(new HorarioAtendimentoResponseDTO(horarioAtendimentoRepository.save(horarioAtendimento)));
-        }
     }
 
     public ResponseEntity<Object> delete(Long id) {
-        Optional<HorarioAtendimento> horarioAtendimentoOptional = horarioAtendimentoRepository.findById(id);
+        HorarioAtendimento horarioAtendimento = horarioAtendimentoRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Horário não encontrado!"));
 
-        if(horarioAtendimentoOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Horário não encontrado!");
-        }else{
-            horarioAtendimentoRepository.delete(horarioAtendimentoOptional.get());
+            horarioAtendimentoRepository.delete(horarioAtendimento);
             return ResponseEntity.status(HttpStatus.OK).build();
-        }
     }
 }

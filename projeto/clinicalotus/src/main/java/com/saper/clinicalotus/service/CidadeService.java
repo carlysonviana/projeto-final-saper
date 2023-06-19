@@ -1,6 +1,7 @@
 package com.saper.clinicalotus.service;
 import com.saper.clinicalotus.dto.CidadeRequestDTO;
 import com.saper.clinicalotus.dto.CidadeResponseDTO;
+import com.saper.clinicalotus.exception.exceptions.ConflictStoreException;
 import com.saper.clinicalotus.model.Cidade;
 import com.saper.clinicalotus.model.Estado;
 import com.saper.clinicalotus.repository.CidadeRepository;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -23,18 +25,18 @@ public class CidadeService {
 
     @Transactional
     public ResponseEntity<Object> save(CidadeRequestDTO cidadeRequestDTO){
-
-        Optional<Estado> optionalEstado = estadoRepository.findById(cidadeRequestDTO.estado_id);
-
-        if(optionalEstado.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estado não encontrado!");
-        }
+        Estado estado = estadoRepository.findById(cidadeRequestDTO.estado_id).orElseThrow(()-> new NoSuchElementException("Estado não encontrado!"));
 
         Cidade cidade = new Cidade();
         cidade.setNome(cidadeRequestDTO.nome);
-        cidade.setEstado(optionalEstado.get());
+        cidade.setEstado(estado);
 
-        cidadeRepository.save(cidade);
+        try {
+            cidadeRepository.save(cidade);
+        }catch (Exception exception){
+            throw  new ConflictStoreException("Não foi possivel salvar a cidade");
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(new CidadeResponseDTO(cidade));
     }
 
@@ -44,39 +46,32 @@ public class CidadeService {
     }
 
     public ResponseEntity<Object> findById(Long id) {
-        Optional<Cidade> cidadeOptional = cidadeRepository.findById(id);
+        Cidade cidade = cidadeRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Cidade não encontrado!"));
 
-        if(cidadeOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cidade não encontrada!");
-        }else{
-            return ResponseEntity.status(HttpStatus.OK).body(new CidadeResponseDTO(cidadeOptional.get()));
-        }
+            return ResponseEntity.status(HttpStatus.OK).body(new CidadeResponseDTO(cidade));
+
     }
     @Transactional
     public Object update(Long id, CidadeRequestDTO cidadeRequestDTO) {
-        Optional<Cidade> cidadeOptional = cidadeRepository.findById(id);
-
-        if(cidadeOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cidade não encontrada!");
-        }else{
-            Cidade cidade = cidadeOptional.get();
+        Cidade cidade = cidadeRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Cidade não encontrado!"));
 
             if(cidadeRequestDTO.nome != null){
                 cidade.setNome(cidadeRequestDTO.nome);
             }
 
             return ResponseEntity.status(HttpStatus.OK).body(new CidadeResponseDTO(cidadeRepository.save(cidade)));
-        }
+
     }
 
     public ResponseEntity<Object> delete(Long id) {
-        Optional<Cidade> cidadeOptional = cidadeRepository.findById(id);
+        Cidade cidade = cidadeRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Cidade não encontrado!"));
 
-        if(cidadeOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cidade não encontrada!");
-        }else{
-            cidadeRepository.delete(cidadeOptional.get());
-            return ResponseEntity.status(HttpStatus.OK).build();
+        try {
+            cidadeRepository.delete(cidade);
+        }catch (Exception exception) {
+            throw  new ConflictStoreException("Não foi possivel deletar a cidade");
         }
+            return ResponseEntity.status(HttpStatus.OK).build();
+
     }
 }

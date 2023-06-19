@@ -2,6 +2,7 @@ package com.saper.clinicalotus.service;
 
 import com.saper.clinicalotus.dto.ConsultaRequestDTO;
 import com.saper.clinicalotus.dto.ConsultaResponseDTO;
+import com.saper.clinicalotus.exception.exceptions.ConflictStoreException;
 import com.saper.clinicalotus.model.Consulta;
 import com.saper.clinicalotus.model.Medico;
 import com.saper.clinicalotus.model.Paciente;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 @Service
 public class ConsultaService {
@@ -29,40 +31,36 @@ public class ConsultaService {
     @Transactional
     public ResponseEntity<Object> save(ConsultaRequestDTO consultaRequestDTO) {
         //Verifcar se paciente existe
-        Optional<Paciente> optionalPaciente = pacienteRepository.findById(consultaRequestDTO.paciente_id);
-
-        if(optionalPaciente.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Paciente não encontrado!");
-        }
+        Paciente paciente = pacienteRepository.findById(consultaRequestDTO.paciente_id).orElseThrow(()-> new NoSuchElementException("Paciente não encontrado!"));
 
         //Verifcar se medico existe
-        Optional<Medico> optionalMedico = medicoRepository.findById(consultaRequestDTO.medico_id);
-
-        if(optionalMedico.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Medico não encontrado!");
-        }
+        Medico medico = medicoRepository.findById(consultaRequestDTO.medico_id).orElseThrow(()-> new NoSuchElementException("Médico não encontrado!"));
 
         Consulta consulta = new Consulta();
         consulta.setDataHora(consultaRequestDTO.dataHora);
         consulta.setAutorizacaoPlano(consultaRequestDTO.autorizacaoPlano);
-        consulta.setPaciente(optionalPaciente.get());
-        consulta.setMedico(optionalMedico.get());
 
-        consultaRepository.save(consulta);
+        consulta.setPaciente(paciente);
+        consulta.setMedico(medico);
+
+        try {
+            consultaRepository.save(consulta);
+        }catch (Exception exception){
+            throw new ConflictStoreException("Não foi possivel salvar a consulta!");
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(new ConsultaResponseDTO(consulta));
     }
 
     public ResponseEntity<Object> confirmar(Long id) {
-        Optional<Consulta> optionalConsulta = consultaRepository.findById(id);
-
-        if(optionalConsulta.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Consulta não encontrado!");
-        }
-        Consulta consulta = optionalConsulta.get();
+        Consulta consulta = consultaRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Consulta não encontrada"));
 
         consulta.setConfirmada(true);
 
-        consultaRepository.save(consulta);
+        try {
+            consultaRepository.save(consulta);
+        }catch (Exception exception){
+            throw new ConflictStoreException("Não foi possivel salvar a consulta!");
+        }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Consulta %d confirmada!", id));
 
@@ -73,22 +71,13 @@ public class ConsultaService {
     }
 
     public ResponseEntity<Object> findById(Long id) {
-        Optional<Consulta> consultaOptional = consultaRepository.findById(id);
+        Consulta consulta = consultaRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Consulta não encontrada"));
 
-        if(consultaOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Consulta não encontrada!");
-        }else{
-            return ResponseEntity.status(HttpStatus.OK).body(new ConsultaResponseDTO(consultaOptional.get()));
-        }
+            return ResponseEntity.status(HttpStatus.OK).body(new ConsultaResponseDTO(consulta));
     }
     @Transactional
     public Object update(Long id, ConsultaRequestDTO consultaRequestDTO) {
-        Optional<Consulta> consultaOptional = consultaRepository.findById(id);
-
-        if(consultaOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Consulta não encontrada!");
-        }else{
-            Consulta consulta = consultaOptional.get();
+        Consulta consulta = consultaRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Consulta não encontrada"));
 
             if(consultaRequestDTO.dataHora != null){
                 consulta.setDataHora(consultaRequestDTO.dataHora);
@@ -98,25 +87,20 @@ public class ConsultaService {
             }
 
             return ResponseEntity.status(HttpStatus.OK).body(new ConsultaResponseDTO(consultaRepository.save(consulta)));
-        }
     }
 
     public ResponseEntity<Object> delete(Long id) {
-        Optional<Consulta> consultaOptional = consultaRepository.findById(id);
+        Consulta consulta = consultaRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Consulta não encontrada"));
 
-        if(consultaOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Consulta não encontrada!");
-        }else{
-            consultaRepository.delete(consultaOptional.get());
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }
+        consultaRepository.delete(consulta);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     public ResponseEntity<Object>  getAllByPaciente_Id(Long pacienteId) {
         return ResponseEntity.status(HttpStatus.OK).body(consultaRepository.findAllByPaciente_Id(pacienteId).stream().map((ConsultaResponseDTO::new)));
     }
 
-    public ResponseEntity<Object> getAllByParameters(Long consultaId, LocalDateTime dataHora, Boolean autorizacaoPlano, Boolean confirmada, Long pacienteId) {
-        return ResponseEntity.status(HttpStatus.OK).body(consultaRepository.findAllByParameters(consultaId, dataHora, autorizacaoPlano, confirmada, pacienteId).stream().map((ConsultaResponseDTO::new)));
+    public ResponseEntity<Object> getAllByParameters(Long consultaId, LocalDateTime dataHora, Boolean autorizacaoPlano, Boolean confirmada, Long pacienteId, Long medicoId) {
+        return ResponseEntity.status(HttpStatus.OK).body(consultaRepository.findAllByParameters(consultaId, dataHora, autorizacaoPlano, confirmada, pacienteId, medicoId).stream().map((ConsultaResponseDTO::new)));
     }
 }

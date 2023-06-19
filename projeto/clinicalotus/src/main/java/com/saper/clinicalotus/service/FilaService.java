@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -20,13 +21,11 @@ public class FilaService {
     FilaRepository filaRepository;
 
     public ResponseEntity<Object> findById(Long id) {
-        Optional<Fila> filaOptional = filaRepository.findById(id);
+        Fila fila = filaRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Fila não encontrada!"));
 
-        if(filaOptional.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Fila não  encontrada!");
-        else{
-            return ResponseEntity.status(HttpStatus.OK).body( new FilaResponseDTO(filaOptional.get()));
-        }
+
+            return ResponseEntity.status(HttpStatus.OK).body( new FilaResponseDTO(fila));
+
 
     }
 
@@ -47,29 +46,23 @@ public class FilaService {
 
     @Transactional
     public Object update(Long id, FilaRequestDTO filaRequestDTO) {
-        Optional<Fila> filaOptional = filaRepository.findById(id);
+        Fila fila = filaRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Fila não encontrada!"));
 
-        if(filaOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Fila não encontrada!");
-        }else{
-            Fila fila = filaOptional.get();
 
-            if(filaRequestDTO.tipoDeFila != null){
+
+            if(filaRequestDTO.tipoDeFila != null) {
                 fila.setTipoDeFila(filaRequestDTO.tipoDeFila);
             }
 
             return ResponseEntity.status(HttpStatus.OK).body(new FilaResponseDTO(filaRepository.save(fila)));
-        }
+
     }
 
     public ResponseEntity<Object> delete(Long id) {
-        Optional<Fila> filaOptional = filaRepository.findById(id);
+        Fila fila = filaRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Fila não encontrada!"));
 
-        if(filaOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Fila não encontrada!");
-        }else{
-            filaRepository.delete(filaOptional.get());
+            filaRepository.delete(fila);
             return ResponseEntity.status(HttpStatus.OK).build();
-        }
+
     }
 }

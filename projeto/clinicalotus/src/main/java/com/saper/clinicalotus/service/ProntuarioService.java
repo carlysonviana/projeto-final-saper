@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -20,13 +21,9 @@ public class ProntuarioService {
     ProntuarioRepository prontuarioRepository;
 
     public Object findById(Long id) {
-        Optional<Prontuario> prontuarioOptional = prontuarioRepository.findById(id);
+        Prontuario prontuario = prontuarioRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Prontuario não encontrado!"));
 
-        if(prontuarioOptional.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Prontuario não  encontrado!");
-        else{
-            return ResponseEntity.status(HttpStatus.OK).body( new ProntuarioResponseDTO(prontuarioOptional.get()));
-        }
+            return ResponseEntity.status(HttpStatus.OK).body( new ProntuarioResponseDTO(prontuario));
     }
 
 
@@ -46,12 +43,7 @@ public class ProntuarioService {
     }
     @Transactional
     public Object update(Long id, ProntuarioRequestDTO prontuarioRequestDTO) {
-        Optional<Prontuario> prontuarioOptional = prontuarioRepository.findById(id);
-
-        if(prontuarioOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Prontuario não encontrado!");
-        }else{
-            Prontuario prontuario = prontuarioOptional.get();
+        Prontuario prontuario = prontuarioRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Prontuario não encontrado!"));
 
             if(prontuarioRequestDTO.diagnostico != null){
                 prontuario.setDiagnostico(prontuarioRequestDTO.diagnostico);
@@ -60,18 +52,13 @@ public class ProntuarioService {
                 prontuario.setReceituario(prontuarioRequestDTO.receituario);
             }
             return ResponseEntity.status(HttpStatus.OK).body(new ProntuarioResponseDTO(prontuarioRepository.save(prontuario)));
-        }
     }
 
     public Object delete(Long id) {
-        Optional<Prontuario> prontuarioOptional = prontuarioRepository.findById(id);
+        Prontuario prontuario = prontuarioRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Prontuario não encontrado!"));
 
-        if(prontuarioOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Prontuario não encontrado!");
-        }else{
-            prontuarioRepository.delete(prontuarioOptional.get());
+            prontuarioRepository.delete(prontuario);
             return ResponseEntity.status(HttpStatus.OK).build();
-        }
     }
 }
 

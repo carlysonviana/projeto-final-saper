@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -32,40 +33,28 @@ public class EstadoService {
     }
 
     public ResponseEntity<Object> findById(Long id) {
-        Optional<Estado> estadoOptional = estadoRepository.findById(id);
+        Estado estado = estadoRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Estado não encontrado!"));
 
-        if(estadoOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estado não encontrada!");
-        }else{
-            return ResponseEntity.status(HttpStatus.OK).body(new EstadoResponseDTO(estadoOptional.get()));
-        }
+            return ResponseEntity.status(HttpStatus.OK).body(new EstadoResponseDTO(estado));
     }
     @Transactional
     public Object update(Long id, EstadoRequestDTO EstadoRequestDTO) {
-        Optional<Estado> estadoOptional = estadoRepository.findById(id);
-
-        if(estadoOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estado não encontrada!");
-        }else{
-            Estado estado = estadoOptional.get();
+        Estado estado = estadoRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Estado não encontrado!"));
 
             if(EstadoRequestDTO.nome != null){
                 estado.setNome(EstadoRequestDTO.nome);
             }
 
             return ResponseEntity.status(HttpStatus.OK).body(new EstadoResponseDTO(estadoRepository.save(estado)));
-        }
     }
 
     public ResponseEntity<Object> delete(Long id) {
-        Optional<Estado> estadoOptional = estadoRepository.findById(id);
+        Estado estado = estadoRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Estado não encontrado!"));
 
-        if(estadoOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estado não encontrada!");
-        }else{
-            estadoRepository.delete(estadoOptional.get());
+            estadoRepository.delete(estado);
+
             return ResponseEntity.status(HttpStatus.OK).build();
-        }
+        
     }
 
 

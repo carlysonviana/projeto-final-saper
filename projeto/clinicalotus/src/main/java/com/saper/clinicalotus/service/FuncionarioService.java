@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -39,17 +40,17 @@ public class FuncionarioService {
     public Object save(FuncionarioRequestDTO funcionarioRequestDTO){
         Funcionario funcionario = new Funcionario(funcionarioRequestDTO);
 
-        Optional<CategoriaFuncionario> categorOptional =  categoriaFuncionarioRepository.findById(funcionarioRequestDTO.categoriaFuncionario_id);
+        CategoriaFuncionario categoriaFuncionario =  categoriaFuncionarioRepository.findById(funcionarioRequestDTO.categoriaFuncionario_id).orElseThrow(()-> new NoSuchElementException("Categoria não encontrada!"));
 
-        funcionario.setCategoriaFuncionario(categorOptional.get());
+        funcionario.setCategoriaFuncionario(categoriaFuncionario);
         funcionario = funcionarioRepository.save(funcionario);
 
-        if (categorOptional.get().getNome().equals("Médico")) {
+        if (categoriaFuncionario.getNome().equals("Médico")) {
             setRoleAsMedico(funcionario);
             Medico medico = new Medico();
             medico.setFuncionario(funcionario);
             medicoRepository.save(medico);
-        } else if (categorOptional.get().getNome().equals("Recepcionista")) {
+        } else if (categoriaFuncionario.getNome().equals("Recepcionista")) {
             setRoleAsRecepcionista(funcionario);
         }
 
@@ -78,23 +79,15 @@ public class FuncionarioService {
     }
 
     public ResponseEntity<Object> findById(Long id) {
-        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findById(id);
+        Funcionario funcionario = funcionarioRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Funcionario não encontrado!"));
 
-        if(funcionarioOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Funcionario não encontrado");
-        }else{
-            return ResponseEntity.status(HttpStatus.OK).body(new FuncionarioResponseDTO(funcionarioOptional.get()));
-        }
+            return ResponseEntity.status(HttpStatus.OK).body(new FuncionarioResponseDTO(funcionario));
+
     }
 
     @Transactional
     public Object update(Long id, FuncionarioRequestDTO funcionarioRequestDTO) {
-        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findById(id);
-
-        if(funcionarioOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Funcionario não encontrado!");
-        }else{
-            Funcionario funcionario = funcionarioOptional.get();
+        Funcionario funcionario = funcionarioRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Funcionario não encontrado!"));
 
             if(funcionarioRequestDTO.nome != null){
                 funcionario.setNome(funcionarioRequestDTO.nome);
@@ -110,18 +103,14 @@ public class FuncionarioService {
             }
             
             return ResponseEntity.status(HttpStatus.OK).body(new FuncionarioResponseDTO(funcionarioRepository.save(funcionario)));
-        }
+
     }
 
     public ResponseEntity<Object> delete(Long id) {
-        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findById(id);
+        Funcionario funcionario = funcionarioRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Funcionario não encontrado!"));
 
-        if(funcionarioOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Funcionario não encontrado!");
-        }else{
-            funcionarioRepository.delete(funcionarioOptional.get());
+            funcionarioRepository.delete(funcionario);
             return ResponseEntity.status(HttpStatus.OK).build();
-        }
     }
 }
 

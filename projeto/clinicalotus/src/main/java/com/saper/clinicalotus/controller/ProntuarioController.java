@@ -2,6 +2,7 @@ package com.saper.clinicalotus.controller;
 
 import com.saper.clinicalotus.dto.ProntuarioRequestDTO;
 import com.saper.clinicalotus.service.ProntuarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +24,12 @@ public class ProntuarioController {
     }
 
     @PostMapping
-    public Object save(@RequestBody ProntuarioRequestDTO prontuarioRequestDTO){
+    public Object save(@Valid @RequestBody ProntuarioRequestDTO prontuarioRequestDTO){
         return prontuarioService.save(prontuarioRequestDTO);
     }
 
     @PutMapping("/{id}")
-    public Object update(@PathVariable(name = "id") Long id, @RequestBody ProntuarioRequestDTO prontuarioRequestDTO){
+    public Object update(@PathVariable(name = "id") Long id,@Valid @RequestBody ProntuarioRequestDTO prontuarioRequestDTO){
 
         return prontuarioService.update(id, prontuarioRequestDTO);
     }

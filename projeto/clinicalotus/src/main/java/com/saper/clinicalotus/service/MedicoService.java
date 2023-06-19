@@ -1,5 +1,6 @@
 package com.saper.clinicalotus.service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,44 +32,30 @@ public class MedicoService {
     }
     
     public ResponseEntity<Object> findById(Long id) {
-        Optional<Medico> medicoOptional = medicoRepository.findById(id);
+        Medico medico = medicoRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Medico não encontrado!"));
 
-        if(medicoOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Medico não encontrado!");
-        }else{
-            return ResponseEntity.status(HttpStatus.OK).body(new MedicoResponseDTO(medicoOptional.get()));
-        }
+            return ResponseEntity.status(HttpStatus.OK).body(new MedicoResponseDTO(medico));
     }
     @Transactional
     public Object update(Long id, MedicoRequestDTO medicoRequestDTO) {
-        Optional<Medico> medicoOptional = medicoRepository.findById(id);
-        Optional<Especialidade> especialidadeOptional = especialidadeRepository.findById(medicoRequestDTO.especialidade_id);
-
-        if(medicoOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoria não encontrada!");
-        }else{
-            Medico medico = medicoOptional.get();
+        Medico medico = medicoRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Medico não encontrado!"));
+        Especialidade especialidade = especialidadeRepository.findById(medicoRequestDTO.especialidade_id).orElseThrow(()-> new NoSuchElementException("Especialidade não encontrada!"));
 
             if(medicoRequestDTO.crm != null){
                 medico.setCrm(medicoRequestDTO.crm);
             }
             if(medicoRequestDTO.especialidade_id != null){
-                medico.setEspecialidade(especialidadeOptional.get());
+                medico.setEspecialidade(especialidade);
             }
 
             return ResponseEntity.status(HttpStatus.OK).body(new MedicoResponseDTO(medicoRepository.save(medico)));
-        }
     }
 
     public ResponseEntity<Object> delete(Long id) {
-        Optional<Medico> medicoOptional = medicoRepository.findById(id);
+        Medico medico = medicoRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Medico não encontrado!"));
 
-        if(medicoOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Medico não encontrado!");
-        }else{
-            medicoRepository.delete(medicoOptional.get());
+            medicoRepository.delete(medico);
             return ResponseEntity.status(HttpStatus.OK).build();
-        }
     }
     
 }

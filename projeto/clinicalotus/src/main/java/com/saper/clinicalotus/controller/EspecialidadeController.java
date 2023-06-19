@@ -1,5 +1,6 @@
 package com.saper.clinicalotus.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,12 +31,12 @@ public class EspecialidadeController {
     }
 
     @PostMapping
-    public Object save(@RequestBody EspecialidadeRequestDTO especialidadeRequestDTO){
+    public Object save(@Valid @RequestBody EspecialidadeRequestDTO especialidadeRequestDTO){
         return especialidadeService.save(especialidadeRequestDTO);
     }
     
     @PutMapping("/{id}")
-    public Object update(@PathVariable(name = "id") Long id,
+    public Object update(@PathVariable(name = "id") Long id,@Valid
                          @RequestBody EspecialidadeRequestDTO especialidadeRequestDTO){
         return especialidadeService.update(id, especialidadeRequestDTO);                        
     }
