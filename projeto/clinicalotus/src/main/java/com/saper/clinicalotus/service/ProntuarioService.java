@@ -3,7 +3,10 @@ package com.saper.clinicalotus.service;
 
 import com.saper.clinicalotus.dto.ProntuarioRequestDTO;
 import com.saper.clinicalotus.dto.ProntuarioResponseDTO;
+import com.saper.clinicalotus.model.Consulta;
+import com.saper.clinicalotus.model.Paciente;
 import com.saper.clinicalotus.model.Prontuario;
+import com.saper.clinicalotus.repository.PacienteRepository;
 import com.saper.clinicalotus.repository.ProntuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +16,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProntuarioService {
 
     @Autowired
     ProntuarioRepository prontuarioRepository;
+
+    @Autowired
+    PacienteRepository pacienteRepository;
 
     public Object findById(Long id) {
         Prontuario prontuario = prontuarioRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Prontuario não encontrado!"));
@@ -34,6 +41,11 @@ public class ProntuarioService {
     @Transactional
     public Object save(ProntuarioRequestDTO prontuarioRequestDTO) {
         Prontuario prontuario = new Prontuario(prontuarioRequestDTO);
+
+        if(prontuarioRequestDTO.paciente_id != null){
+            Paciente paciente = pacienteRepository.findById(prontuarioRequestDTO.paciente_id).orElseThrow(() -> new NoSuchElementException("Paciente não encontrado"));
+            prontuario.setPaciente(paciente);
+        }
 
         prontuario = prontuarioRepository.save(prontuario);
 
@@ -56,6 +68,13 @@ public class ProntuarioService {
 
     public Object delete(Long id) {
         Prontuario prontuario = prontuarioRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Prontuario não encontrado!"));
+        Paciente paciente = pacienteRepository.findById(prontuario.getPaciente().getId()).orElseThrow(() -> new NoSuchElementException("Paciente não encontrado!"));
+        paciente.setProntuario(null);
+
+        Set<Consulta> consultas = prontuario.getConsultas();
+        for(Consulta consulta: consultas){
+            consulta.setProntuario(null);
+        }
 
             prontuarioRepository.delete(prontuario);
             return ResponseEntity.status(HttpStatus.OK).build();

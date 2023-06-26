@@ -17,6 +17,8 @@ public class ConsultaResponseDTO {
     public Long medico_id;
     public boolean confirmada;
 
+    public Long prontuario_id;
+
     public ConsultaResponseDTO(Consulta consulta) {
         this.consulta_id = consulta.getId();
         this.dataHora = consulta.getDataHora();
@@ -24,5 +26,6 @@ public class ConsultaResponseDTO {
         this.paciente_id = consulta.getPaciente().getId();
         this.medico_id = consulta.getMedico().getFuncionario().getId();
         this.confirmada = consulta.isConfirmada();
+        this.prontuario_id = (consulta.getProntuario() != null) ? consulta.getProntuario().getId(): null;
     }
 }

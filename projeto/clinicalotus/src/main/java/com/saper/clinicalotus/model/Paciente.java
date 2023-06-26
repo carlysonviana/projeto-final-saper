@@ -37,6 +37,8 @@ public class Paciente {
     @JoinColumn(name = "plano_id", nullable = true)
     private PlanoDeSaude planoDeSaude;
 
+    @OneToOne(mappedBy = "paciente", cascade = CascadeType.ALL)
+    private Prontuario prontuario;
 
     public Paciente() {
     }
@@ -119,5 +121,13 @@ public class Paciente {
 
     public void setPlanoDeSaude(PlanoDeSaude planoDeSaude) {
         this.planoDeSaude = planoDeSaude;
+    }
+
+    public Prontuario getProntuario() {
+        return prontuario;
+    }
+
+    public void setProntuario(Prontuario prontuario) {
+        this.prontuario = prontuario;
     }
 }
