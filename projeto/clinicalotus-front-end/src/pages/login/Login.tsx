@@ -1,12 +1,16 @@
-import React, { useState } from 'react'
+import React, {useContext, useState} from 'react'
 import './Login.scss'
 import { LoginState } from "./types";
 import { Button, Card, Form } from 'react-bootstrap';
 import { useTranslation } from "react-i18next";
 import Axios from "axios";
+import {useNavigate} from "react-router-dom";
+import {AuthContext} from "../../store/store";
 
 function Login() {
   const [state, setState] = useState<LoginState>()
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
   const { t} = useTranslation()
   const handleOnChange = (e: any) => {
     setState((state) => ({...state, [e.target.name]: e.target.value} as LoginState))
@@ -24,6 +28,10 @@ function Login() {
 
     Axios.get('http://localhost:8080/my/funcionario', config).then((res) => {
         console.log(res);
+        if(res.status === 200){
+            if(auth.setUser) auth.setUser(res.data);
+            navigate('/')
+        }
     }).catch( (err) => {
         console.log(err);
     })

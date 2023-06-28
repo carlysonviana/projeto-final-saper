@@ -1,12 +1,14 @@
-import React from 'react'
+import React, {useState} from 'react'
 import './App.css'
-import {Login} from "./pages";
+import MainRouter from "./route/MainRouter";
+import {AuthContext, User} from "./store/store";
 
 function App() {
+  const [user, setUser] = useState<User>()
   return (
-    <>
-      <Login/>
-    </>
+    <AuthContext.Provider value={{user, setUser}}>
+      <MainRouter/>
+    </AuthContext.Provider>
   )
 }
 
