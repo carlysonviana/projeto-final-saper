@@ -15,8 +15,10 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.httpBasic(withDefaults());
+        http.cors(withDefaults());
         http.authorizeHttpRequests( (authz)->authz
                 .requestMatchers( "/**").hasAnyRole( "ADMIN")
+                .requestMatchers("/my/**").authenticated()
                 .requestMatchers("/paciente/**").hasAnyRole("RECEPCIONISTA")
                 .requestMatchers("/consulta/**").hasAnyRole("RECEPCIONISTA")
                 .requestMatchers(HttpMethod.GET, "/paciente/**").hasAnyRole("MEDICO")
@@ -26,7 +28,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.GET, "/funcionario/medico/**",
                                                          "/medico/**",
                                                          "/funcionario/**",
-                                                         "/categoria/**",
+                                                         "/categoriaFuncionario/**",
                                                          "/especialidade/**",
                                                          "/horarioAtendimento/**",
                                                          "/consulta/**",
