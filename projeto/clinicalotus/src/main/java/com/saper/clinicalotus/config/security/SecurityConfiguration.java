@@ -17,8 +17,8 @@ public class SecurityConfiguration {
         http.httpBasic(withDefaults());
         http.cors(withDefaults());
         http.authorizeHttpRequests( (authz)->authz
-                .requestMatchers( "/**").hasAnyRole( "ADMIN")
                 .requestMatchers("/my/**").authenticated()
+                .requestMatchers( "/**").hasAnyRole( "ADMIN")
                 .requestMatchers("/paciente/**").hasAnyRole("RECEPCIONISTA")
                 .requestMatchers("/consulta/**").hasAnyRole("RECEPCIONISTA")
                 .requestMatchers(HttpMethod.GET, "/paciente/**").hasAnyRole("MEDICO")
@@ -34,8 +34,7 @@ public class SecurityConfiguration {
                                                          "/consulta/**",
                                                          "/cidade/**",
                                                          "/estado/**",
-                                                         "/endereco/**",
-                                                         "/my/**").hasAnyRole("MEDICO", "RECEPCIONISTA")
+                                                         "/endereco/**").hasAnyRole("MEDICO", "RECEPCIONISTA")
                 .requestMatchers(HttpMethod.PUT, "/funcionario/medico/**", "/medico/**", "/horarioAtendimento/**").hasAnyRole("MEDICO")
                 .requestMatchers(HttpMethod.POST, "/endereco/**").hasAnyRole("MEDICO", "RECEPCIONISTA")
                 .requestMatchers(HttpMethod.GET, "/planoDeSaude/**").hasAnyRole("RECEPCIONISTA")
