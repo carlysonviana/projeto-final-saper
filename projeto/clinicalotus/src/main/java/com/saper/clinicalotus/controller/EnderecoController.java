@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/endereco")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class EnderecoController {
     @Autowired
     EnderecoService enderecoService;

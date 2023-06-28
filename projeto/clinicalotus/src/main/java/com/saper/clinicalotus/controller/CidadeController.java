@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cidade")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CidadeController {
     @Autowired
     CidadeService cidadeService;

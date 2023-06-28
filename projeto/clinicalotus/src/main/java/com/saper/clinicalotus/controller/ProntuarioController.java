@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/prontuario")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProntuarioController {
 
     @Autowired

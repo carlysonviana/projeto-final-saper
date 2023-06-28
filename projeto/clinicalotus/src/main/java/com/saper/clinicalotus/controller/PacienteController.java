@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/paciente")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PacienteController {
 
     @Autowired
