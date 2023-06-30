@@ -1,7 +1,14 @@
 import React, {useContext} from 'react';
-import {Route, Routes} from "react-router-dom";
-import {Login, PublicPage} from "../pages";
+import {Outlet, Route, Routes} from "react-router-dom";
+import {Login,
+        PublicPage,
+        Paciente,
+        Consulta,
+        HorarioAtendimento,
+        } from "../pages";
 import {AuthContext} from "../store/store";
+import {BaseLayout} from "../components/layout";
+
 
 function MainRouter(){
     const auth = useContext(AuthContext);
@@ -18,7 +25,13 @@ function MainRouter(){
                         </>
                     ) :
                     (
-                        <Route path={'/'} element={<div>Dashboard</div>}>
+                        <Route path={'/'} element={<BaseLayout/>}>
+                            <Route path={'/pacientes'} element={<Paciente/>}>
+                            </Route>
+                            <Route path={'/consultas'} element={<Consulta/>}>
+                            </Route>
+                            <Route path={'/horarios'} element={<HorarioAtendimento/>}>
+                            </Route>
                         </Route>
                     )
             }
