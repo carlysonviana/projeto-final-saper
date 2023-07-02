@@ -53,11 +53,20 @@ public class FuncionarioService {
         } else if (categoriaFuncionario.getNome().equals("Recepcionista")) {
             setRoleAsRecepcionista(funcionario);
         }
-
+        else{
+            setRoleAsAdmin(funcionario);
+        }
 
         FuncionarioResponseDTO funcionarioResponseDTO = new FuncionarioResponseDTO(funcionario);
 
         return funcionarioResponseDTO;
+    }
+
+    public void setRoleAsAdmin(Funcionario funcionario) {
+        Optional<Role> optionalRole = roleRepository.findByRole(RoleNames.ROLE_ADMIN);
+        Set<Role> setRole = new HashSet<>();
+        setRole.add(optionalRole.get());
+        funcionario.setRoles(setRole);
     }
 
     public void setRoleAsMedico(Funcionario funcionario) {
