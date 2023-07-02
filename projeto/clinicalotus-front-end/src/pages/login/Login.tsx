@@ -3,6 +3,7 @@ import './Login.scss'
 import { LoginState } from "./types";
 import { Button, Card, Form } from 'react-bootstrap';
 import { useTranslation } from "react-i18next";
+import useAPI from "service/api";
 import Axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {AuthContext} from "../../store/store";
@@ -11,6 +12,7 @@ function Login() {
   const [state, setState] = useState<LoginState>()
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
+  const API = useAPI();
   const { t} = useTranslation()
   const handleOnChange = (e: any) => {
     setState((state) => ({...state, [e.target.name]: e.target.value} as LoginState))
@@ -26,12 +28,10 @@ function Login() {
         }
     }
 
-    Axios.get('http://localhost:8080/my/funcionario', config).then((res) => {
-        console.log(res);
-        if(res.status === 200){
-            if(auth.setUser) auth.setUser(res.data);
-            navigate('/')
-        }
+    API.get('my/funcionario', undefined, config)
+        .then((data) => {
+            if(auth.setUser) auth.setUser({...data, login: state?.login, senha: state?.senha});
+            navigate('/');
     }).catch( (err) => {
         console.log(err);
     })
@@ -61,4 +61,4 @@ function Login() {
   )
 }
 
-export default Login
+export default Login;

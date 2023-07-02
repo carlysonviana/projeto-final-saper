@@ -7,6 +7,8 @@ export type User = {
     "email": string,
     "telefone": string,
     "celular": string,
+    "login": string,
+    "senha": string,
     "dataNascimento": string,
     "dataAdmissao": string,
     "endereco_id": number,
