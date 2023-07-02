@@ -2,6 +2,9 @@ import React, {useContext} from 'react';
 import styles from './SideBar.module.scss';
 import {Link, useNavigate} from "react-router-dom";
 import {AuthContext} from "store/store";
+import {HiUserGroup} from "react-icons/hi";
+import {LiaStethoscopeSolid} from "react-icons/lia";
+import {LuCalendarClock} from "react-icons/lu";
 function SideBar(){
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
@@ -9,6 +12,47 @@ function SideBar(){
     function handleSingOut() {
         if(auth.setUser) auth.setUser(undefined);
         navigate('/')
+    }
+
+    //Roles 1- Admin, 2- Médico e 3- Recepcionista
+    const routes: any = {
+         1: [
+             {
+                 path: 'pacientes',
+                 icon: <HiUserGroup/>,
+                 text: 'Pacientes'
+             },
+             {
+                 path: 'consultas',
+                 icon: <LiaStethoscopeSolid/>,
+                 text: 'Consultas'
+             },
+             {
+                 path: 'horarios',
+                 icon: <LuCalendarClock/>,
+                 text: 'Horarios'
+             }
+         ],
+         2: [
+             {
+                 path: 'pacientes',
+                 icon: <HiUserGroup/>,
+                 text: 'Pacientes'
+             },
+             {
+                 path: 'horarios',
+                 icon: <LuCalendarClock/>,
+                 text: 'Horarios'
+             }
+         ],
+         3: [
+             {
+                 path: 'pacientes',
+                 icon: <HiUserGroup/>,
+                 text: 'Pacientes'
+             }
+         ],
+         4: []
     }
 
     return(
@@ -21,25 +65,22 @@ function SideBar(){
             <hr/>
             <ul className="nav nav-pills flex-column mb-auto">
                 <li className="nav-item">
-                    <Link to="/" className="nav-link active" aria-current="page">
+                    <Link to="/" className="nav-link text-white" aria-current="page">
                         Home
                     </Link>
                 </li>
-                <li>
-                    <Link to="/pacientes" className="nav-link text-white">
-                        Paciente
-                    </Link>
-                </li>
-                <li>
-                    <Link to="/consultas" className="nav-link text-white">
-                        Consulta
-                    </Link>
-                </li>
-                <li>
-                    <Link to="/horarios" className="nav-link text-white">
-                        Horarios Atendimento
-                    </Link>
-                </li>
+                {
+                    routes[auth.user?.categoriaFuncionario_id || 4].map((route: any) => {
+                        return (
+                            <li className="nav-item" key={route.path}>
+                                <Link to={route.path} className="nav-link text-white" aria-current="page">
+                                    {route.icon}{' '}
+                                    {route.text}
+                                </Link>
+                            </li>
+                        )
+                    })
+                }
             </ul>
             <hr/>
             <div className="dropdown">
