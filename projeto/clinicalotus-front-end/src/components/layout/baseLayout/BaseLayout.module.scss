@@ -1,7 +1,14 @@
 .container {
   display: flex;
+
   .sidebar {
     width: 280px;
-    min-height: 100vh;
+    min-height: 85vh;
   }
+}
+
+.navbar{
+  min-height: 10vh;
+  background-color: #1c1c39;
+  padding-left: 35%;
 }
