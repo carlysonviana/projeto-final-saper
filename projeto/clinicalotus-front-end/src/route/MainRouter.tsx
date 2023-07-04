@@ -4,8 +4,12 @@ import {
     Login,
     PublicPage,
     PacienteList,
-    Consulta,
-    HorarioAtendimento, PacienteEdit, PacienteAdd,
+    PacienteEdit,
+    PacienteAdd,
+    ConsultaAdd,
+    ConsultaEdit,
+    ConsultaList,
+    HorarioAtendimento
 } from "../pages";
 import {AuthContext} from "../store/store";
 import {BaseLayout} from "../components/layout";
@@ -35,7 +39,13 @@ function MainRouter(){
                                 <Route path={'edit/:id'} element={<PacienteEdit/>}>
                                 </Route>
                             </Route>
-                            <Route path={'consultas'} element={<Consulta/>}>
+                            <Route path={'consultas'} element={<Outlet/>}>
+                                <Route path={''} element={<ConsultaList/>}>
+                                </Route>
+                                <Route path={'add'} element={<ConsultaAdd/>}>
+                                </Route>
+                                <Route path={'edit/:id'} element={<ConsultaEdit/>}>
+                                </Route>
                             </Route>
                             <Route path={'horarios'} element={<HorarioAtendimento/>}>
                             </Route>
