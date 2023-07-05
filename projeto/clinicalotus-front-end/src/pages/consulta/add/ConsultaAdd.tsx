@@ -1,4 +1,7 @@
-import React, {useContext, useState} from 'react'
+/* eslint-disable */
+// @ts-nocheck
+import React, {useEffect, useState} from 'react'
+import Select from 'react-select';
 import {ConsultaAddForm} from "../type";
 import {Button, Form} from "react-bootstrap";
 import useAPI from "../../../service/api";
@@ -6,8 +9,45 @@ import {useNavigate} from "react-router-dom";
 
 function ConsultaAdd(){
     const [state, setState] = useState<ConsultaAddForm>()
+    const [patients, setPatients] = useState([])
+    const [doctors, setDoctors] = useState([])
+    const [selectedPatient, setSelectedPatients] = useState(null)
+    const [selectedDoctor, setSelectedDoctor] = useState(null)
     const API = useAPI();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        onLoad()
+    },[])
+
+    const onLoad = async () => {
+        try {
+            const responsePatients = await API.get('paciente')
+            const responseDoctor = await API.get('funcionario/medico')
+
+            if(responsePatients) {
+                let newPatientOptions = []
+                for(const entry of responsePatients) {
+                    newPatientOptions.push({ value: entry.id, label: entry.nome })
+                }
+
+                setPatients(newPatientOptions)
+            }
+
+            if(responseDoctor) {
+                let newDoctorOptions = []
+                for(const entry of responseDoctor) {
+                    newDoctorOptions.push({ value: entry.funcionario_id, label: entry.funcionario_id })
+                }
+
+                console.log(newDoctorOptions)
+                setDoctors(newDoctorOptions)
+            }
+        } catch (e) {
+            alert(e)
+        }
+    }
+
     const handleOnChange = (e: any) => {
         setState((state) => ({...state, [e.target.name]: e.target.value} as ConsultaAddForm))
     }
@@ -44,6 +84,14 @@ function ConsultaAdd(){
 
     };
 
+    const onSelectPatient = (currentPatient = null) => {
+        setSelectedPatients(currentPatient)
+    }
+
+    const onSelectDoctor = (currentDoctor = null) => {
+        setSelectedDoctor(currentDoctor)
+    }
+
     return (
         <div className={'card m-auto'}>
             <div className={'card-header'}>
@@ -61,11 +109,23 @@ function ConsultaAdd(){
                     </Form.Check>
                     <Form.Group>
                         <Form.Label>Paciente</Form.Label>
-                        <Form.Control type={'number'} name={'paciente_id'} onChange={handleOnChange} value={state?.paciente_id}></Form.Control>
+                        <Select
+                            placeholder='Selecione uma opção'
+                            className='Select'
+                            defaultValue={selectedPatient}
+                            onChange={(patient) => onSelectPatient(patient)}
+                            options={patients}
+                        />
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Médico</Form.Label>
-                        <Form.Control type={'number'} name={'medico_id'} onChange={handleOnChange} value={state?.medico_id}></Form.Control>
+                        <Select
+                            placeholder='Selecione uma opção'
+                            className='Select'
+                            defaultValue={selectedDoctor}
+                            onChange={(doctor) => onSelectDoctor(doctor)}
+                            options={doctors}
+                        />
                     </Form.Group>
                     <Button type={'submit'}>Marcar</Button>
                 </Form>
