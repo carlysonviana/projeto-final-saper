@@ -23,12 +23,12 @@ function ConsultaAdd(){
     const onLoad = async () => {
         try {
             const responsePatients = await API.get('paciente')
-            const responseDoctor = await API.get('funcionario/medico')
+            const responseDoctor = await API.get('funcionario')
 
             if(responsePatients) {
                 let newPatientOptions = []
                 for(const entry of responsePatients) {
-                    newPatientOptions.push({ value: entry.id, label: entry.nome })
+                    newPatientOptions.push({ value: entry.id, label: entry.nome });
                 }
 
                 setPatients(newPatientOptions)
@@ -37,7 +37,9 @@ function ConsultaAdd(){
             if(responseDoctor) {
                 let newDoctorOptions = []
                 for(const entry of responseDoctor) {
-                    newDoctorOptions.push({ value: entry.funcionario_id, label: entry.funcionario_id })
+                    if(entry.categoriaFuncionario_id == 2) {
+                        newDoctorOptions.push({value: entry.id, label: entry.nome});
+                    }
                 }
 
                 console.log(newDoctorOptions)
@@ -59,7 +61,11 @@ function ConsultaAdd(){
     const handleSubmit = (e: any) => {
         e.preventDefault();
 
-        if(state) state.dataHora = formatDateHour(state.dataHora, 'pt');
+        if(state) {
+            state.dataHora = formatDateHour(state.dataHora, 'pt');
+            state.paciente_id = selectedPatient.value;
+            state.medico_id = selectedDoctor.value;
+        }
 
         API.post('consulta', state).then(() => {
             navigate('/consultas');
@@ -85,11 +91,11 @@ function ConsultaAdd(){
     };
 
     const onSelectPatient = (currentPatient = null) => {
-        setSelectedPatients(currentPatient)
+        setSelectedPatients(currentPatient);
     }
 
     const onSelectDoctor = (currentDoctor = null) => {
-        setSelectedDoctor(currentDoctor)
+        setSelectedDoctor(currentDoctor);
     }
 
     return (
