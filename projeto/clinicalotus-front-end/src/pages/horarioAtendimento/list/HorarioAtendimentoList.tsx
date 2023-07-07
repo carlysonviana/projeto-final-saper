@@ -33,7 +33,8 @@ function HorarioAtendimentoList() {
                     <th>DIA</th>
                     <th>HORARIO INICIO</th>
                     <th>HORARIO FIM</th>
-                    <th>MEDICO</th>
+                    <th>MÉDICO</th>
+                    <th>AÇÕES</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,6 +50,9 @@ function HorarioAtendimentoList() {
                                 </td>
                                 <td>
                                     {horarioAtendimento.horarioFim}
+                                </td>
+                                <td>
+                                    {horarioAtendimento.medico_id}
                                 </td>
                                 <td>
                                     <div>
