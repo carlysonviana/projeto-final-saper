@@ -5,4 +5,5 @@ export * from './consulta';
 export * from "./horarioAtendimento";
 export * from './funcionario';
 export * from './profile';
+export * from './prontuario';
 

@@ -27,6 +27,10 @@ public class Consulta {
     @JoinColumn(name = "funcionario_id")
     private Medico medico;
 
+    @ManyToOne
+    @JoinColumn(name = "prontuario_id")
+    private Prontuario prontuario;
+
     public Consulta(){
     }
     public Consulta(Long id, LocalDateTime dataHora, boolean autorizacaoPlano, Paciente paciente, Medico medico) {
@@ -82,5 +86,13 @@ public class Consulta {
     }
     public void setMedico(Medico medico) {
         this.medico = medico;
+    }
+
+    public Prontuario getProntuario() {
+        return prontuario;
+    }
+
+    public void setProntuario(Prontuario prontuario) {
+        this.prontuario = prontuario;
     }
 }

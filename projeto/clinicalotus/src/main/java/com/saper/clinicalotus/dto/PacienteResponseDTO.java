@@ -29,6 +29,9 @@ public class PacienteResponseDTO {
 
     @Nullable
     public Long plano_id;
+
+    @Nullable
+    public Long prontuario_id;
     public PacienteResponseDTO(Paciente paciente) {
         this.id = paciente.getId();
         this.nome = paciente.getNome();
@@ -37,6 +40,7 @@ public class PacienteResponseDTO {
         this.dataNascimento = paciente.getDataNascimento();
         this.endereco_id = (paciente.getEndereco() != null) ? paciente.getEndereco().getId() : null;
         this.plano_id = (paciente.getPlanoDeSaude() != null) ? paciente.getPlanoDeSaude().getId() : null;
+        this.prontuario_id = (paciente.getProntuario() != null) ? paciente.getProntuario().getId() : null;
 
         Set<Consulta> consultas = paciente.getConsultas();
         if(consultas != null){
