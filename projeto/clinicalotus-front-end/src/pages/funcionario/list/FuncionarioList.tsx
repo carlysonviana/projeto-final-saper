@@ -5,6 +5,7 @@ import { Funcionario } from "../types";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import {BsPlus} from "react-icons/bs";
+import {AuthContext} from "../../../store/store";
 
 function FuncionarioList() {
     const API = useAPI();
@@ -14,6 +15,7 @@ function FuncionarioList() {
     const [filtroCpf, setFiltroCpf] = useState('');
 
     const categoria = new Map<number, string>([[1, 'ADMIN'], [2, 'MÉDICO'], [3, 'RECEPCIONISTA']]);
+    const auth = useContext(AuthContext);
 
     useEffect(() => {
         API.get('funcionario')
@@ -94,11 +96,13 @@ function FuncionarioList() {
                             Limpar
                         </Button>
                     </Col>
-                    <Col>
-                        <Button variant="success" onClick={() => navigate('add')}>
-                            <BsPlus /> Adicionar
-                        </Button>
-                    </Col>
+                    {auth.user?.categoriaFuncionario_id === 1 &&
+                        <Col>
+                            <Button variant="success" onClick={() => navigate('add')}>
+                                <BsPlus /> Adicionar
+                            </Button>
+                        </Col>
+                    }
                 </Row>
             </Form>
             <table className={'table table-striped table-bordered table-condensed table-hover'}>
@@ -109,7 +113,7 @@ function FuncionarioList() {
                     <th>E-MAIL</th>
                     <th>CELULAR</th>
                     <th>CATEGORIA FUNCIONÁRIO</th>
-                    <th>AÇÕES</th>
+                    {auth.user?.categoriaFuncionario_id === 1 && <th>AÇÕES</th>}
                 </tr>
                 </thead>
                 <tbody>
@@ -121,12 +125,14 @@ function FuncionarioList() {
                             <td>{funcionario.email}</td>
                             <td>{funcionario.celular}</td>
                             <td>{categoria.get(funcionario.categoriaFuncionario_id)}</td>
-                            <td>
-                                <div>
-                                    <FaEdit onClick={() => navigate('edit/' + funcionario.id)}></FaEdit>
-                                    <FaTrash onClick={() => remove(funcionario.id)}></FaTrash>
-                                </div>
-                            </td>
+                            {auth.user?.categoriaFuncionario_id === 1 && (
+                                <td>
+                                    <div>
+                                        <FaEdit onClick={() => navigate('edit/' + funcionario.id)} />
+                                        <FaTrash onClick={() => remove(funcionario.id)} />
+                                    </div>
+                                </td>
+                            )}
                         </tr>
                     );
                 })}

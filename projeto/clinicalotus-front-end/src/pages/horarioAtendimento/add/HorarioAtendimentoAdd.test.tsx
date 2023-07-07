@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import HorarioAtendimento from "./horarioAtendimento";
+import HorarioAtendimento from "./HorarioAtendimentoAdd";
 
 test('renders learn react link', () => {
   render(<HorarioAtendimento />)

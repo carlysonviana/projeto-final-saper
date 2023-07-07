@@ -18,7 +18,7 @@ public class SecurityConfiguration {
         http.cors(withDefaults());
         http.authorizeHttpRequests( (authz)->authz
                 .requestMatchers("/my/**").authenticated()
-                .requestMatchers( "/**").hasAnyRole( "ADMIN")
+                .requestMatchers( "/**").hasAnyRole( "ADMIN", "RECEPCIONISTA", "MEDICO")
                 .requestMatchers("/paciente/**").hasAnyRole("RECEPCIONISTA")
                 .requestMatchers("/consulta/**").hasAnyRole("RECEPCIONISTA")
                 .requestMatchers(HttpMethod.GET, "/paciente/**").hasAnyRole("MEDICO")

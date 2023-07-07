@@ -5,12 +5,14 @@ import {Paciente} from "../type";
 import {FaEdit, FaTrash} from "react-icons/fa";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import {BsPlus, BsSearch, BsX} from "react-icons/bs";
+import {AuthContext} from "../../../store/store";
 function PacienteList(){
     const API = useAPI();
     const navigate = useNavigate();
     const [pacientes, setPacientes] = useState<Paciente[]>([])
     const [filtroNome, setFiltroNome] = useState('');
     const [filtroCPF, setFiltroCPF] = useState('');
+    const auth = useContext(AuthContext);
 
     const buscarPacientes = async () => {
         const data = await API.get('paciente');
@@ -75,11 +77,13 @@ function PacienteList(){
                         <BsX /> Limpar
                     </Button>
                 </Col>
-                <Col>
-                    <Button variant="success" onClick={() => navigate('add')}>
-                        <BsPlus /> Adicionar
-                    </Button>
-                </Col>
+                {auth.user?.categoriaFuncionario_id === 1 &&
+                    <Col>
+                        <Button variant="success" onClick={() => navigate('add')}>
+                            <BsPlus /> Adicionar
+                        </Button>
+                    </Col>
+                }
             </Row>
         </Form>
         {/*<button onClick={() => navigate('add')} className={'btn btn-sm btn-success'}> Adicionar </button>*/}
@@ -90,7 +94,7 @@ function PacienteList(){
                     <th>CPF</th>
                     <th>E-MAIL</th>
                     <th>DATA DE NASCIMENTO</th>
-                    <th>AÇÕES</th>
+                    {auth.user?.categoriaFuncionario_id === 1 && <th>AÇÕES</th>}
                 </tr>
             </thead>
             <tbody>
@@ -110,12 +114,14 @@ function PacienteList(){
                             <td>
                                 {paciente.dataNascimento}
                             </td>
-                            <td>
-                                <div>
-                                    <FaEdit onClick={() => navigate('edit/' + paciente.id)}></FaEdit>
-                                    <FaTrash onClick={() => remove(paciente.id)}></FaTrash>
-                                </div>
-                            </td>
+                            {auth.user?.categoriaFuncionario_id === 1 && (
+                                <td>
+                                    <div>
+                                        <FaEdit onClick={() => navigate('edit/' + paciente.id)}></FaEdit>
+                                        <FaTrash onClick={() => remove(paciente.id)}></FaTrash>
+                                    </div>
+                                </td>
+                            )}
                         </tr>
                     )
                 })

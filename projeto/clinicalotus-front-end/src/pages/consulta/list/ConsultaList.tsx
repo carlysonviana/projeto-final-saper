@@ -5,6 +5,7 @@ import { Consulta } from "../type";
 import {FaCheck, FaEdit, FaTrash} from "react-icons/fa";
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import {BsPlus, BsSearch, BsX} from "react-icons/bs";
+import {AuthContext} from "../../../store/store";
 
 function ConsultaList() {
     const API = useAPI();
@@ -17,18 +18,33 @@ function ConsultaList() {
     const [filtroPaciente, setFiltroPaciente] = useState('');
     const [filtroMedico, setFiltroMedico] = useState('');
     const [filtroConfirmada, setFiltroConfirmada] = useState('');
+    const auth = useContext(AuthContext);
 
     useEffect(() => {
-        API.get('consulta')
-            .then((data) => {
-                if (Array.isArray(data)) {
-                    setConsultas(data);
-                    onLoad();
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        if(auth.user?.categoriaFuncionario_id == 2){
+            API.get('consulta/busca?medicoId='+auth.user.id)
+                .then((data) => {
+                    if (Array.isArray(data)) {
+                        setConsultas(data);
+                        onLoad();
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+        else{
+            API.get('consulta')
+                .then((data) => {
+                    if (Array.isArray(data)) {
+                        setConsultas(data);
+                        onLoad();
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     }, []);
 
     const onLoad = async () => {
@@ -175,7 +191,7 @@ function ConsultaList() {
                     <th>PACIENTE</th>
                     <th>MÉDICO</th>
                     <th>CONFIRMADA</th>
-                    <th>AÇÕES</th>
+                    {auth.user?.categoriaFuncionario_id === 1 && <th>AÇÕES</th>}
                 </tr>
                 </thead>
                 <tbody>
@@ -187,13 +203,15 @@ function ConsultaList() {
                             <td>{pacientes.get(consulta.paciente_id)}</td>
                             <td>{medicos.get(consulta.medico_id)}</td>
                             <td>{consulta.confirmada ? 'Sim' :'Não'}</td>
-                            <td>
-                                <div>
-                                    <FaEdit onClick={() => navigate('edit/' + consulta.consulta_id)}></FaEdit>
-                                    <FaTrash onClick={() => remove(consulta.consulta_id)}></FaTrash>
-                                    <FaCheck onClick={() => confirmarConsulta(consulta.consulta_id)}></FaCheck>
-                                </div>
-                            </td>
+                            {auth.user?.categoriaFuncionario_id === 1 && (
+                                <td>
+                                    <div>
+                                        <FaEdit onClick={() => navigate('edit/' + consulta.consulta_id)}></FaEdit>
+                                        <FaTrash onClick={() => remove(consulta.consulta_id)}></FaTrash>
+                                        <FaCheck onClick={() => confirmarConsulta(consulta.consulta_id)}></FaCheck>
+                                    </div>
+                                </td>
+                            )}
                         </tr>
                     );
                 })}

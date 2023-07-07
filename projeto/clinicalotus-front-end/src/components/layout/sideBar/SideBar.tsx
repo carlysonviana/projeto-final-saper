@@ -45,6 +45,11 @@ function SideBar(){
                  text: 'Pacientes'
              },
              {
+                 path: 'consultas',
+                 icon: <LiaStethoscopeSolid/>,
+                 text: 'Consultas'
+             },
+             {
                  path: 'horarios',
                  icon: <LuCalendarClock/>,
                  text: 'Horarios'
@@ -55,7 +60,22 @@ function SideBar(){
                  path: 'pacientes',
                  icon: <HiUserGroup/>,
                  text: 'Pacientes'
-             }
+             },
+             {
+                 path: 'funcionarios',
+                 icon: <HiUserGroup/>,
+                 text: 'Funcionarios'
+             },
+             {
+                 path: 'consultas',
+                 icon: <LiaStethoscopeSolid/>,
+                 text: 'Consultas'
+             },
+             {
+                 path: 'horarios',
+                 icon: <LuCalendarClock/>,
+                 text: 'Horarios'
+             },
          ],
          4: []
     }
