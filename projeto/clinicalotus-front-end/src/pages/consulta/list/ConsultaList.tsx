@@ -2,7 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import useAPI from "../../../service/api";
 import { useNavigate } from "react-router-dom";
 import { Consulta } from "../type";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import {FaCheck, FaEdit, FaTrash} from "react-icons/fa";
+import { Form, Button, Row, Col } from 'react-bootstrap';
+import {BsPlus, BsSearch, BsX} from "react-icons/bs";
 
 function ConsultaList() {
     const API = useAPI();
@@ -10,6 +12,11 @@ function ConsultaList() {
     const [consultas, setConsultas] = useState<Consulta[]>([]);
     const [pacientes, setPacientes] = useState<Map<number, string>>(new Map<number, string>());
     const [medicos, setMedicos] = useState<Map<number, string>>(new Map<number, string>());
+    const [filtroDataHora, setFiltroDataHora] = useState('');
+    const [filtroAutorizacaoPlano, setFiltroAutorizacaoPlano] = useState('');
+    const [filtroPaciente, setFiltroPaciente] = useState('');
+    const [filtroMedico, setFiltroMedico] = useState('');
+    const [filtroConfirmada, setFiltroConfirmada] = useState('');
 
     useEffect(() => {
         API.get('consulta')
@@ -65,13 +72,102 @@ function ConsultaList() {
             });
     };
 
+    const filtrarConsultas = () => {
+        const consultasFiltradas = consultas.filter((consulta) => {
+            if (filtroDataHora && !consulta.dataHora.toLowerCase().includes(filtroDataHora.toLowerCase())) {
+                return false;
+            }
+            if (filtroAutorizacaoPlano && (consulta.autorizacaoPlano? 'Sim':'Não') !== filtroAutorizacaoPlano) {
+                return false;
+            }
+            if (filtroPaciente && !pacientes.get(consulta.paciente_id)?.toLowerCase().includes(filtroPaciente.toLowerCase())) {
+                return false;
+            }
+            if (filtroMedico && !medicos.get(consulta.medico_id)?.toLowerCase().includes(filtroMedico.toLowerCase())) {
+                return false;
+            }
+            if (filtroConfirmada && (consulta.confirmada? 'Sim': 'Não') !== filtroConfirmada) {
+                return false;
+            }
+            return true;
+        });
+
+        setConsultas(consultasFiltradas);
+    };
+
+    const limparFiltros = () => {
+        setFiltroDataHora('');
+        setFiltroAutorizacaoPlano('');
+        setFiltroPaciente('');
+        setFiltroMedico('');
+        setFiltroConfirmada('');
+        API.get('consulta')
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setConsultas(data);
+                    onLoad();
+                }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    };
+
+    function confirmarConsulta(consulta_id: number) {
+        API.post('consulta/confirmar/'+consulta_id)
+            .then((data) => {
+                API.get('consulta')
+                    .then((data) => {
+                        if (Array.isArray(data)) setConsultas(data);
+                        alert(`Consulta ${consulta_id} confirmada com sucesso!`);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     return (
-        <div>
+        <div className={'offset-md-1 col-md-8'}>
             <h1>Lista de Consultas</h1>
-            <button onClick={() => navigate('add')} className={'btn btn-sm btn-success'}>
-                Nova Consulta
-            </button>
-            <table className={'table table-bordered'}>
+            <Form>
+                <Row>
+                    <Col>
+                        <Form.Control type="text" placeholder="Data/Hora" value={filtroDataHora} onChange={(e) => setFiltroDataHora(e.target.value)} />
+                    </Col>
+                    <Col>
+                        <Form.Control type="text" placeholder="Autorização" value={filtroAutorizacaoPlano} onChange={(e) => setFiltroAutorizacaoPlano(e.target.value)} />
+                    </Col>
+                    <Col>
+                        <Form.Control type="text" placeholder="Paciente" value={filtroPaciente} onChange={(e) => setFiltroPaciente(e.target.value)} />
+                    </Col>
+                    <Col>
+                        <Form.Control type="text" placeholder="Médico" value={filtroMedico} onChange={(e) => setFiltroMedico(e.target.value)} />
+                    </Col>
+                    <Col>
+                        <Form.Control type="text" placeholder="Confirmação" value={filtroConfirmada} onChange={(e) => setFiltroConfirmada(e.target.value)} />
+                    </Col>
+                    <Col>
+                        <Button variant="primary" onClick={filtrarConsultas}>
+                            <BsSearch /> Filtrar
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button variant="danger" onClick={limparFiltros}>
+                            <BsX /> Limpar
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button variant="success" onClick={() => navigate('add')}>
+                            <BsPlus /> Marcar
+                        </Button>
+                    </Col>
+                </Row>
+            </Form>
+            <table className={'table table-striped table-bordered table-condensed table-hover'}>
                 <thead>
                 <tr>
                     <th>DATA/HORA</th>
@@ -90,11 +186,12 @@ function ConsultaList() {
                             <td>{consulta.autorizacaoPlano ? 'Sim' : 'Não'}</td>
                             <td>{pacientes.get(consulta.paciente_id)}</td>
                             <td>{medicos.get(consulta.medico_id)}</td>
-                            <td>{consulta.confirmada ? 'Sim' : 'Não'}</td>
+                            <td>{consulta.confirmada ? 'Sim' :'Não'}</td>
                             <td>
                                 <div>
                                     <FaEdit onClick={() => navigate('edit/' + consulta.consulta_id)}></FaEdit>
                                     <FaTrash onClick={() => remove(consulta.consulta_id)}></FaTrash>
+                                    <FaCheck onClick={() => confirmarConsulta(consulta.consulta_id)}></FaCheck>
                                 </div>
                             </td>
                         </tr>

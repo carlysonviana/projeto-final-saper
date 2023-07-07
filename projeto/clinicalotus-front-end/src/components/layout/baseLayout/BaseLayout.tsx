@@ -8,7 +8,7 @@ function BaseLayout(){
     return(
         <>
             <Navbar className={styles.navbar}>
-                <img className={'centered-image'} src={logo} alt={'Logo'}/>
+                <img className={styles.centeredImage} src={logo} alt={'Logo'}/>
             </Navbar>
             <div className={styles.container}>
                 <div className={"d-flex flex-column flex-shrink-0 p-3 text-bg-dark " + styles.sidebar}>

@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import {Outlet, Route, Routes} from "react-router-dom";
 import {
     Login,
+    ProfileEdit,
     PublicPage,
     PacienteList,
     PacienteEdit,
@@ -9,7 +10,10 @@ import {
     ConsultaAdd,
     ConsultaEdit,
     ConsultaList,
-    HorarioAtendimento
+    FuncionarioList,
+    FuncionarioEdit,
+    FuncionarioAdd,
+    HorarioAtendimento,
 } from "../pages";
 import {AuthContext} from "../store/store";
 import {BaseLayout} from "../components/layout";
@@ -39,6 +43,14 @@ function MainRouter(){
                                 <Route path={'edit/:id'} element={<PacienteEdit/>}>
                                 </Route>
                             </Route>
+                            <Route path={'funcionarios'} element={<Outlet/>}>
+                                <Route path={''} element={<FuncionarioList/>}>
+                                </Route>
+                                <Route path={'add'} element={<FuncionarioAdd/>}>
+                                </Route>
+                                <Route path={'edit/:id'} element={<FuncionarioEdit/>}>
+                                </Route>
+                            </Route>
                             <Route path={'consultas'} element={<Outlet/>}>
                                 <Route path={''} element={<ConsultaList/>}>
                                 </Route>
@@ -46,6 +58,8 @@ function MainRouter(){
                                 </Route>
                                 <Route path={'edit/:id'} element={<ConsultaEdit/>}>
                                 </Route>
+                            </Route>
+                            <Route path={'profile'} element={<ProfileEdit/>}>
                             </Route>
                             <Route path={'horarios'} element={<HorarioAtendimento/>}>
                             </Route>
