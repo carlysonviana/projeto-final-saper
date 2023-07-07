@@ -23,6 +23,11 @@ function SideBar(){
                  text: 'Pacientes'
              },
              {
+                 path: 'funcionarios',
+                 icon: <HiUserGroup/>,
+                 text: 'Funcionarios'
+             },
+             {
                  path: 'consultas',
                  icon: <LiaStethoscopeSolid/>,
                  text: 'Consultas'
@@ -31,13 +36,18 @@ function SideBar(){
                  path: 'horarios',
                  icon: <LuCalendarClock/>,
                  text: 'Horarios'
-             }
+             },
          ],
          2: [
              {
                  path: 'pacientes',
                  icon: <HiUserGroup/>,
                  text: 'Pacientes'
+             },
+             {
+                 path: 'consultas',
+                 icon: <LiaStethoscopeSolid/>,
+                 text: 'Consultas'
              },
              {
                  path: 'horarios',
@@ -50,7 +60,22 @@ function SideBar(){
                  path: 'pacientes',
                  icon: <HiUserGroup/>,
                  text: 'Pacientes'
-             }
+             },
+             {
+                 path: 'funcionarios',
+                 icon: <HiUserGroup/>,
+                 text: 'Funcionarios'
+             },
+             {
+                 path: 'consultas',
+                 icon: <LiaStethoscopeSolid/>,
+                 text: 'Consultas'
+             },
+             {
+                 path: 'horarios',
+                 icon: <LuCalendarClock/>,
+                 text: 'Horarios'
+             },
          ],
          4: []
     }
@@ -92,7 +117,7 @@ function SideBar(){
                     <strong>{auth.user?.nome}</strong>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-dark text-small shadow">
-                    <li><a className="dropdown-item" href="#">Perfil</a></li>
+                    <li><div onClick={() => navigate('/profile')} className={"dropdown-item "+ styles.signOut}>Perfil</div></li>
                     <li>
                         <hr className="dropdown-divider"/>
                     </li>

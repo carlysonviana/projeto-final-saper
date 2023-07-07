@@ -24,10 +24,10 @@ function HorarioAtendimentoList() {
         })
     }
 
-    return <div>
+    return <div className={'offset-md-1 col-md-8'}>
         <h1>Lista de Horarios</h1>
         <button onClick={() => navigate('add')} className={'btn btn-sm btn-success'}> Adicionar </button>
-        <table className={'table table-bordered'}>
+        <table className={'table table-striped table-bordered table-condensed table-hover'}>
             <thead>
                 <tr>
                     <th>DIA</th>

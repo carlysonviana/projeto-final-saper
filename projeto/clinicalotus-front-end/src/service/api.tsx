@@ -25,7 +25,7 @@ const useAPI = () => {
         }
     }
 
-    const post = async (url: string, body: any, config?: any) =>{
+    const post = async (url: string, body?: any, config?: any) =>{
         try {
             const response = await Axios.post(URL_BASE + url, body,  config? config: {...configDefault});
             return response.data;
