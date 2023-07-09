@@ -80,6 +80,7 @@ function HorarioAtendimentoAdd() {
                     <Form.Group>
                         <Form.Label>Dia da Semana</Form.Label>
                         <Form.Control as="select" name="diaDaSemana" value={state?.diaDaSemana} onChange={handleOnChange}>
+                            <option></option>
                             <option value={"segunda-feira"}>SEGUNDA-FEIRA</option>
                             <option value={"terça-feira"}>TERÇA-FEIRA</option>
                             <option value={"quarta-feira"}>QUARTA-FEIRA</option>

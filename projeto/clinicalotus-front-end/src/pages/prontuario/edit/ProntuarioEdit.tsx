@@ -38,11 +38,11 @@ function ProntuarioEdit() {
             <div className={'card-body'}>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group>
-                        <Form.Label>Diagnostico</Form.Label>
+                        <Form.Label>Diagnóstico</Form.Label>
                         <Form.Control type={'text'} name={'diagnostico'} onChange={handleOnChange} value={state?.diagnostico}></Form.Control>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Label>Horario Inicial</Form.Label>
+                        <Form.Label>Receituário</Form.Label>
                         <Form.Control type={'text'} name={'receituario'} onChange={handleOnChange} value={state?.receituario}></Form.Control>
                     </Form.Group>
 

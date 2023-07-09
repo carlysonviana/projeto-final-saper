@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "store/store";
 import { HiUserGroup } from "react-icons/hi";
 import { LiaStethoscopeSolid } from "react-icons/lia";
-import { LuCalendarClock } from "react-icons/lu";
+import { LuCalendarClock, LuFileText } from "react-icons/lu";
 function SideBar() {
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
@@ -38,7 +38,7 @@ function SideBar() {
                 text: 'Horarios'
             }, {
                 path: 'prontuarios',
-                icon: <LuCalendarClock />,
+                icon: <LuFileText />,
                 text: 'Prontuarios'
             },
         ],
@@ -59,7 +59,7 @@ function SideBar() {
                 text: 'Horarios'
             }, {
                 path: 'prontuarios',
-                icon: <LuCalendarClock />,
+                icon: <LuFileText />,
                 text: 'Prontuarios'
             }
         ],
