@@ -22,6 +22,6 @@ O sistema deve ser capaz de exibir para os médicos a sua lista de atendimento d
 - [ ] Confirmar presença;
 - [ ] Confirmar autorização do plano de saúde;
 - [ ] Registrar consulta;
-- [ ] Visualizar protuário;
+- [ ] Visualizar prontuário;
 - [ ] Gerenciar fila de atendimento.
 

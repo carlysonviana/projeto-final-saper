@@ -10,8 +10,8 @@ function BaseLayout(){
             <Navbar className={styles.navbar}>
                 <img className={styles.centeredImage} src={logo} alt={'Logo'}/>
             </Navbar>
-            <div className={styles.container}>
-                <div className={"d-flex flex-column flex-shrink-0 p-3 text-bg-dark " + styles.sidebar}>
+            <div className={styles.container +' '+ styles.backgroundImage}>
+                <div className={"d-flex flex-column flex-shrink-0 p-3 " + styles.sidebar}>
                     <SideBar/>
                 </div>
                 <Outlet/>

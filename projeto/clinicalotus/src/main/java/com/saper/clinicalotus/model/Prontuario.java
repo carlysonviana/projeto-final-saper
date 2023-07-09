@@ -4,23 +4,24 @@ package com.saper.clinicalotus.model;
 import com.saper.clinicalotus.dto.ProntuarioRequestDTO;
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 public class Prontuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "prontuario_id")
     private Long id;
-
-    //@ManyToOne
-    //@JoinColumn(name = "medico_id")
-    //Medico medico;
-
-    //@OneToOne(mappedBy="prontuario", cascade = CascadeType.ALL)
-    // private Paciente paciente;
-
     private String receituario;
 
     private String diagnostico;
+
+    @OneToOne(optional = true)
+    @JoinColumn(name = "paciente_id")
+    private Paciente paciente;
+
+    @OneToMany(mappedBy = "prontuario")
+    Set<Consulta> consultas;
 
     public Prontuario(){}
     public Prontuario(ProntuarioRequestDTO prontuarioRequestDTO) {
@@ -36,7 +37,7 @@ public class Prontuario {
         this.id = id;
     }
 
-    /*
+
     public Paciente getPaciente() {
         return paciente;
     }
@@ -44,7 +45,7 @@ public class Prontuario {
     public void setPaciente(Paciente paciente) {
         this.paciente = paciente;
     }
-     */
+
 
     public String getReceituario() {
         return receituario;
@@ -60,5 +61,13 @@ public class Prontuario {
 
     public void setDiagnostico(String diagnostico) {
         this.diagnostico = diagnostico;
+    }
+
+    public Set<Consulta> getConsultas() {
+        return consultas;
+    }
+
+    public void setConsultas(Set<Consulta> consultas) {
+        this.consultas = consultas;
     }
 }

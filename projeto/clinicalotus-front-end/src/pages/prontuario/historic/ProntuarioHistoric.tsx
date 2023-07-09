@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import useAPI from "../../../service/api";
-import { useNavigate } from "react-router-dom";
-import { Consulta } from "../type";
+import {useNavigate, useParams} from "react-router-dom";
+import { Consulta } from "../../consulta/type";
 import {FaCheck, FaEdit, FaTrash} from "react-icons/fa";
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import {BsPlus, BsSearch, BsX} from "react-icons/bs";
 import {AuthContext} from "../../../store/store";
-import styles from '../../../components/layout/baseLayout/BaseLayout.module.scss';
 
-function ConsultaList() {
+function ProntuarioHistoric() {
     const API = useAPI();
     const navigate = useNavigate();
     const [consultas, setConsultas] = useState<Consulta[]>([]);
@@ -21,32 +20,21 @@ function ConsultaList() {
     const [filtroConfirmada, setFiltroConfirmada] = useState('');
     const auth = useContext(AuthContext);
 
+    const { paciente_id } = useParams();
+
     useEffect(() => {
-        if(auth.user?.categoriaFuncionario_id == 2){
-            API.get('consulta/busca?medicoId='+auth.user.id)
-                .then((data) => {
-                    if (Array.isArray(data)) {
-                        setConsultas(data);
-                        onLoad();
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
-        else{
-            API.get('consulta')
-                .then((data) => {
-                    if (Array.isArray(data)) {
-                        setConsultas(data);
-                        onLoad();
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
+        API.get('consulta/busca?confirmada=true&pacienteId='+paciente_id)
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setConsultas(data);
+                    onLoad();
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
+
 
     const onLoad = async () => {
         try {
@@ -55,7 +43,7 @@ function ConsultaList() {
 
             if (Array.isArray(pacientesData)) {
                 const pacientesMap = new Map<number, string>();
-                pacientesData.forEach((paciente: { id: number; nome: string }) => {
+                pacientesData.forEach((paciente: { id: number; nome: string}) => {
                     pacientesMap.set(paciente.id, paciente.nome);
                 });
                 setPacientes(pacientesMap);
@@ -97,9 +85,6 @@ function ConsultaList() {
             if (filtroAutorizacaoPlano && (consulta.autorizacaoPlano? 'Sim':'Não') !== filtroAutorizacaoPlano) {
                 return false;
             }
-            if (filtroPaciente && !pacientes.get(consulta.paciente_id)?.toLowerCase().includes(filtroPaciente.toLowerCase())) {
-                return false;
-            }
             if (filtroMedico && !medicos.get(consulta.medico_id)?.toLowerCase().includes(filtroMedico.toLowerCase())) {
                 return false;
             }
@@ -115,19 +100,17 @@ function ConsultaList() {
     const limparFiltros = () => {
         setFiltroDataHora('');
         setFiltroAutorizacaoPlano('');
-        setFiltroPaciente('');
         setFiltroMedico('');
-        setFiltroConfirmada('');
         API.get('consulta')
             .then((data) => {
                 if (Array.isArray(data)) {
                     setConsultas(data);
                     onLoad();
                 }
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
 
     function confirmarConsulta(consulta_id: number) {
@@ -149,7 +132,7 @@ function ConsultaList() {
 
     return (
         <div className={'offset-md-1 col-md-8'}>
-            <h1>Lista de Consultas</h1>
+            <h1>Histórico de Consultas</h1>
             <Form>
                 <Row>
                     <Col>
@@ -159,13 +142,7 @@ function ConsultaList() {
                         <Form.Control type="text" placeholder="Autorização" value={filtroAutorizacaoPlano} onChange={(e) => setFiltroAutorizacaoPlano(e.target.value)} />
                     </Col>
                     <Col>
-                        <Form.Control type="text" placeholder="Paciente" value={filtroPaciente} onChange={(e) => setFiltroPaciente(e.target.value)} />
-                    </Col>
-                    <Col>
                         <Form.Control type="text" placeholder="Médico" value={filtroMedico} onChange={(e) => setFiltroMedico(e.target.value)} />
-                    </Col>
-                    <Col>
-                        <Form.Control type="text" placeholder="Confirmação" value={filtroConfirmada} onChange={(e) => setFiltroConfirmada(e.target.value)} />
                     </Col>
                     <Col>
                         <Button variant="primary" onClick={filtrarConsultas}>
@@ -187,12 +164,13 @@ function ConsultaList() {
             <table className={'table table-striped table-bordered table-condensed table-hover'}>
                 <thead>
                 <tr>
+                    <th>PACIENTE:</th>
+                    <td colSpan={2}>{pacientes.get(Number(paciente_id))}</td>
+                </tr>
+                <tr>
                     <th>DATA/HORA</th>
                     <th>AUTORIZACAO PLANO?</th>
-                    <th>PACIENTE</th>
                     <th>MÉDICO</th>
-                    <th>CONFIRMADA</th>
-                    {auth.user?.categoriaFuncionario_id === 1 && <th>AÇÕES</th>}
                 </tr>
                 </thead>
                 <tbody>
@@ -201,18 +179,7 @@ function ConsultaList() {
                         <tr key={consulta.consulta_id}>
                             <td>{consulta.dataHora}</td>
                             <td>{consulta.autorizacaoPlano ? 'Sim' : 'Não'}</td>
-                            <td>{pacientes.get(consulta.paciente_id)}</td>
                             <td>{medicos.get(consulta.medico_id)}</td>
-                            <td>{consulta.confirmada ? 'Sim' :'Não'}</td>
-                            {auth.user?.categoriaFuncionario_id === 1 && (
-                                <td>
-                                    <div>
-                                        <FaEdit className={styles.spaceIcons} onClick={() => navigate('edit/' + consulta.consulta_id)}></FaEdit>
-                                        <FaTrash className={styles.spaceIcons} onClick={() => remove(consulta.consulta_id)}></FaTrash>
-                                        <FaCheck className={styles.spaceIcons} onClick={() => confirmarConsulta(consulta.consulta_id)}></FaCheck>
-                                    </div>
-                                </td>
-                            )}
                         </tr>
                     );
                 })}
@@ -222,4 +189,8 @@ function ConsultaList() {
     );
 }
 
-export default ConsultaList;
+export default ProntuarioHistoric;
+
+
+
+

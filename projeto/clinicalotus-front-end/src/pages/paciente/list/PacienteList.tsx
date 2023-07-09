@@ -6,6 +6,9 @@ import {FaEdit, FaTrash} from "react-icons/fa";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import {BsPlus, BsSearch, BsX} from "react-icons/bs";
 import {AuthContext} from "../../../store/store";
+import styles from "../../../components/layout/baseLayout/BaseLayout.module.scss";
+
+
 function PacienteList(){
     const API = useAPI();
     const navigate = useNavigate();
@@ -57,38 +60,39 @@ function PacienteList(){
         setPacientes(pacientesFiltrados);
     };
 
-    return <div className={'offset-md-1 col-md-8'}>
-        <h1>Lista de Pacientes</h1>
-        <Form>
-            <Row>
-                <Col>
-                    <Form.Control type="text" placeholder="Filtrar por nome" value={filtroNome} onChange={(e) => setFiltroNome(e.target.value)} />
-                </Col>
-                <Col>
-                    <Form.Control type="text" placeholder="Filtrar por CPF" value={filtroCPF} onChange={(e) => setFiltroCPF(e.target.value)} />
-                </Col>
-                <Col>
-                    <Button variant="primary" onClick={filtrarPacientes}>
-                        <BsSearch /> Filtrar
-                    </Button>
-                </Col>
-                <Col>
-                    <Button variant="danger" onClick={limparFiltros}>
-                        <BsX /> Limpar
-                    </Button>
-                </Col>
-                {auth.user?.categoriaFuncionario_id === 1 &&
+    return (
+        <div className={'offset-md-1 col-md-8'}>
+            <h1>Lista de Pacientes</h1>
+            <Form>
+                <Row>
                     <Col>
-                        <Button variant="success" onClick={() => navigate('add')}>
-                            <BsPlus /> Adicionar
+                        <Form.Control type="text" placeholder="Filtrar por nome" value={filtroNome} onChange={(e) => setFiltroNome(e.target.value)} />
+                    </Col>
+                    <Col>
+                        <Form.Control type="text" placeholder="Filtrar por CPF" value={filtroCPF} onChange={(e) => setFiltroCPF(e.target.value)} />
+                    </Col>
+                    <Col>
+                        <Button variant="primary" onClick={filtrarPacientes}>
+                            <BsSearch /> Filtrar
                         </Button>
                     </Col>
-                }
-            </Row>
-        </Form>
-        {/*<button onClick={() => navigate('add')} className={'btn btn-sm btn-success'}> Adicionar </button>*/}
-        <table className={'table table-striped table-bordered table-condensed table-hover'}>
-            <thead>
+                    <Col>
+                        <Button variant="danger" onClick={limparFiltros}>
+                            <BsX /> Limpar
+                        </Button>
+                    </Col>
+                    {auth.user?.categoriaFuncionario_id === 1 &&
+                        <Col>
+                            <Button variant="success" onClick={() => navigate('add')}>
+                                <BsPlus /> Adicionar
+                            </Button>
+                        </Col>
+                    }
+                </Row>
+            </Form>
+            {/*<button onClick={() => navigate('add')} className={'btn btn-sm btn-success'}> Adicionar </button>*/}
+            <table className={'table table-striped table-bordered table-condensed table-hover'}>
+                <thead>
                 <tr>
                     <th>NOME</th>
                     <th>CPF</th>
@@ -96,38 +100,39 @@ function PacienteList(){
                     <th>DATA DE NASCIMENTO</th>
                     {auth.user?.categoriaFuncionario_id === 1 && <th>AÇÕES</th>}
                 </tr>
-            </thead>
-            <tbody>
-            {
-                pacientes.map((paciente) => {
-                    return (
-                        <tr key={paciente.id}>
-                            <td>
-                                {paciente.nome}
-                            </td>
-                            <td>
-                                {paciente.cpf}
-                            </td>
-                            <td>
-                                {paciente.email}
-                            </td>
-                            <td>
-                                {paciente.dataNascimento}
-                            </td>
-                            {auth.user?.categoriaFuncionario_id === 1 && (
+                </thead>
+                <tbody>
+                {
+                    pacientes.map((paciente) => {
+                        return (
+                            <tr key={paciente.id}>
                                 <td>
-                                    <div>
-                                        <FaEdit onClick={() => navigate('edit/' + paciente.id)}></FaEdit>
-                                        <FaTrash onClick={() => remove(paciente.id)}></FaTrash>
-                                    </div>
+                                    {paciente.nome}
                                 </td>
-                            )}
-                        </tr>
-                    )
-                })
-            }
-            </tbody>
-        </table>
-    </div>
+                                <td>
+                                    {paciente.cpf}
+                                </td>
+                                <td>
+                                    {paciente.email}
+                                </td>
+                                <td>
+                                    {paciente.dataNascimento}
+                                </td>
+                                {auth.user?.categoriaFuncionario_id === 1 && (
+                                    <td>
+                                        <div>
+                                            <FaEdit className={styles.spaceIcons} title={'Editar Paciente'} onClick={() => navigate('edit/' + paciente.id)}></FaEdit>
+                                            <FaTrash className={styles.spaceIcons} title={'Remover Paciente'} onClick={() => remove(paciente.id)}></FaTrash>
+                                        </div>
+                                    </td>
+                                )}
+                            </tr>
+                        )
+                    })
+                }
+                </tbody>
+            </table>
+        </div>
+    );
 }
 export default PacienteList

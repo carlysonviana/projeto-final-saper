@@ -1,3 +1,15 @@
 .signOut {
   cursor: pointer;
 }
+
+.nav-link {
+  transition: background-color 0.2s;
+}
+
+li:hover {
+  background-color: #646494;
+}
+
+li:active{
+  background-color: #5E5EA6;
+}

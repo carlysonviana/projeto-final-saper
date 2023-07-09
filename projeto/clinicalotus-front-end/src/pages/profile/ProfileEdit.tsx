@@ -3,16 +3,16 @@ import {Profile} from "./types";
 import {Button, Form} from "react-bootstrap";
 import useAPI from "../../service/api";
 import {useNavigate} from "react-router-dom";
+import {AuthContext} from "../../store/store";
 
 function ProfileEdit(){
     const [state, setState] = useState<Profile>()
     const API = useAPI();
     const navigate = useNavigate();
-
-    // const {id} = useParams();
+    const auth = useContext(AuthContext);
 
     useEffect(() => {
-        API.get('my').then(data =>{
+        API.get('my/funcionario').then(data =>{
             setState((state) => ({...state, nome: data.nome, email: data.email, celular: data.celular} as Profile));
         })
     }, [])
@@ -23,9 +23,7 @@ function ProfileEdit(){
     const handleSubmit = (e: any) => {
         e.preventDefault();
 
-        // if(state) state.dataNascimento = formatDate(state.dataNascimento, 'pt');
-
-        API.put('my', state).then(() => {
+        API.put('funcionario/'+auth.user?.id, state).then(() => {
             alert('Atualização Realizada Com Sucesso!');
             navigate('/profile');
         });
