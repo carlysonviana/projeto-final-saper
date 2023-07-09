@@ -68,12 +68,12 @@ function ProntuarioAdd() {
             <div className={'card-body'}>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group>
-                        <Form.Label>Diagnostico</Form.Label>
-                        <Form.Control type={'text'} name="diagnostico" value={state?.diagnostico} onChange={handleOnChange}></Form.Control>
+                        <Form.Label>Diagnóstico</Form.Label>
+                        <textarea className={"form-control"} name="diagnostico" onChange={handleOnChange} value={state?.diagnostico} rows={4}></textarea>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Label>Receituario</Form.Label>
-                        <Form.Control type={'text'} name={'receituario'} onChange={handleOnChange} value={state?.receituario}></Form.Control>
+                        <Form.Label>Receituário</Form.Label>
+                        <textarea className={"form-control"} name="receituario" onChange={handleOnChange} value={state?.receituario} rows={4}></textarea>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Paciente</Form.Label>

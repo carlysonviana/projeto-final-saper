@@ -101,7 +101,8 @@ import {
     FuncionarioAdd,
     ProntuarioAdd,
     ProntuarioEdit,
-    ProntuarioList
+    ProntuarioList,
+    ProntuarioView
 } from "../pages";
 import { AuthContext } from "../store/store";
 import { BaseLayout } from "../components/layout";
@@ -149,6 +150,7 @@ function MainRouter() {
                                 <Route path="" element={<ProntuarioList />} />
                                 <Route path="add" element={<ProntuarioAdd />} />
                                 <Route path="edit/:id" element={<ProntuarioEdit />} />
+                                <Route path="view/:id" element={<ProntuarioView />} />
                             </Route>
 
                             <Route path="profile" element={<ProfileEdit />} />

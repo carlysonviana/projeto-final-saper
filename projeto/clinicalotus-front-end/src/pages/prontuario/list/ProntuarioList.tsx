@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Prontuario } from "../type";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Form, Button, Row, Col } from 'react-bootstrap';
-import { BsPlus, BsSearch, BsX } from "react-icons/bs";
+import { BsPlus, BsSearch, BsX, BsEyeFill } from "react-icons/bs";
 
 
 function ProntuarioList() {
@@ -105,8 +105,6 @@ function ProntuarioList() {
                 <thead>
                     <tr>
                         <th>PACIENTE</th>
-                        <th>DIAGNÓSTICO</th>
-                        <th>RECEITUÁRIO</th>
                         <th>AÇÕES</th>
                     </tr>
                 </thead>
@@ -119,13 +117,8 @@ function ProntuarioList() {
                                         {pacientes.get(prontuarioPacientes.paciente_id)}
                                     </td>
                                     <td>
-                                        {prontuarioPacientes.diagnostico}
-                                    </td>
-                                    <td>
-                                        {prontuarioPacientes.receituario}
-                                    </td>
-                                    <td>
                                         <div>
+                                            <BsEyeFill onClick={() => navigate('view/' + prontuarioPacientes.id)}></BsEyeFill>
                                             <FaEdit onClick={() => navigate('edit/' + prontuarioPacientes.id)}></FaEdit>
                                             <FaTrash onClick={() => remove(prontuarioPacientes.id)}></FaTrash>
                                         </div>
