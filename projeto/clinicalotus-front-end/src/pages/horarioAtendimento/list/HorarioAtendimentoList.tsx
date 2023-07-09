@@ -5,6 +5,7 @@ import { HorarioAtendimento } from "../type";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { BsPlus, BsSearch, BsX } from "react-icons/bs";
+import styles from "../../../components/layout/baseLayout/BaseLayout.module.scss";
 
 
 function HorarioAtendimentoList() {
@@ -127,8 +128,8 @@ function HorarioAtendimentoList() {
                                     </td>
                                     <td>
                                         <div>
-                                            <FaEdit onClick={() => navigate('edit/' + horarioAtendimento.horario_id)}></FaEdit>
-                                            <FaTrash onClick={() => remove(horarioAtendimento.horario_id)}></FaTrash>
+                                            <FaEdit className={styles.spaceIcons} title={'Editar Horário'} onClick={() => navigate('edit/' + horarioAtendimento.horario_id)}></FaEdit>
+                                            <FaTrash className={styles.spaceIcons} title={'Remover Horário'} onClick={() => remove(horarioAtendimento.horario_id)}></FaTrash>
                                         </div>
                                     </td>
                                 </tr>
