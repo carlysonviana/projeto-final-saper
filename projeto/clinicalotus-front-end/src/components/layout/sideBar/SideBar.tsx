@@ -3,7 +3,7 @@ import styles from './SideBar.module.scss';
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "store/store";
 import { HiUserGroup } from "react-icons/hi";
-import { LiaStethoscopeSolid } from "react-icons/lia";
+import {LiaIdBadgeSolid, LiaStethoscopeSolid} from "react-icons/lia";
 import { LuCalendarClock, LuFileText } from "react-icons/lu";
 import angelica from "../../../assets/imgs/foto_angelica.png";
 import galba from "../../../assets/imgs/foto_galba.png";
@@ -30,7 +30,7 @@ function SideBar() {
             },
             {
                 path: 'funcionarios',
-                icon: <HiUserGroup />,
+                icon: <LiaIdBadgeSolid />,
                 text: 'Funcionarios'
             },
             {
@@ -77,7 +77,7 @@ function SideBar() {
             },
             {
                 path: 'funcionarios',
-                icon: <HiUserGroup />,
+                icon: <LiaIdBadgeSolid />,
                 text: 'Funcionarios'
             },
             {
