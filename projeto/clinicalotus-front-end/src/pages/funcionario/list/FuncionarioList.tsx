@@ -6,6 +6,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import {BsPlus} from "react-icons/bs";
 import {AuthContext} from "../../../store/store";
+import styles from "../../../components/layout/baseLayout/BaseLayout.module.scss";
 
 function FuncionarioList() {
     const API = useAPI();
@@ -128,8 +129,8 @@ function FuncionarioList() {
                             {auth.user?.categoriaFuncionario_id === 1 && (
                                 <td>
                                     <div>
-                                        <FaEdit onClick={() => navigate('edit/' + funcionario.id)} />
-                                        <FaTrash onClick={() => remove(funcionario.id)} />
+                                        <FaEdit className={styles.spaceIcons} title={'Editar Funcionário'} onClick={() => navigate('edit/' + funcionario.id)} />
+                                        <FaTrash className={styles.spaceIcons} title={'Remover Funcionário'} onClick={() => remove(funcionario.id)} />
                                     </div>
                                 </td>
                             )}

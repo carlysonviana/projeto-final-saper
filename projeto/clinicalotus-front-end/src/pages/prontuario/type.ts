@@ -15,3 +15,8 @@ export type ProntuarioEditForm = {
     "receituario": string,
     "diagnostico": string
 }
+
+export type ProntuarioViewForm = {
+    "receituario": string,
+    "diagnostico": string
+}

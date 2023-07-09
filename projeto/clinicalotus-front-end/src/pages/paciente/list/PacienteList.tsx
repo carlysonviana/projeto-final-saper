@@ -6,6 +6,8 @@ import {FaEdit, FaTrash} from "react-icons/fa";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import {BsPlus, BsSearch, BsX} from "react-icons/bs";
 import {AuthContext} from "../../../store/store";
+import styles from "../../../components/layout/baseLayout/BaseLayout.module.scss";
+
 
 function PacienteList(){
     const API = useAPI();
@@ -119,8 +121,8 @@ function PacienteList(){
                                 {auth.user?.categoriaFuncionario_id === 1 && (
                                     <td>
                                         <div>
-                                            <FaEdit onClick={() => navigate('edit/' + paciente.id)}></FaEdit>
-                                            <FaTrash onClick={() => remove(paciente.id)}></FaTrash>
+                                            <FaEdit className={styles.spaceIcons} title={'Editar Paciente'} onClick={() => navigate('edit/' + paciente.id)}></FaEdit>
+                                            <FaTrash className={styles.spaceIcons} title={'Remover Paciente'} onClick={() => remove(paciente.id)}></FaTrash>
                                         </div>
                                     </td>
                                 )}

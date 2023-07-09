@@ -102,8 +102,9 @@ import {
     ProntuarioAdd,
     ProntuarioEdit,
     ProntuarioList,
-    ProntuarioHistoric
-} from "../pages";
+    ProntuarioHistoric,
+    ProntuarioView} from "../pages";
+
 import { AuthContext } from "../store/store";
 import { BaseLayout } from "../components/layout";
 
@@ -150,6 +151,7 @@ function MainRouter() {
                                 <Route path="add" element={<ProntuarioAdd />} />
                                 <Route path="edit/:id" element={<ProntuarioEdit />} />
                                 <Route path="historic/:paciente_id" element={<ProntuarioHistoric />} />
+                                <Route path="view/:id" element={<ProntuarioView />} />
                             </Route>
 
                             <Route path="profile" element={<ProfileEdit />} />

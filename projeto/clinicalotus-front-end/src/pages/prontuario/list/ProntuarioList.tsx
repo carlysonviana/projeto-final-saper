@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Prontuario } from "../type";
 import {FaEdit, FaFile, FaTrash} from "react-icons/fa";
 import { Form, Button, Row, Col } from 'react-bootstrap';
-import { BsPlus, BsSearch, BsX } from "react-icons/bs";
+import { BsPlus, BsSearch, BsX, BsEyeFill } from "react-icons/bs";
+import styles from '../../../components/layout/baseLayout/BaseLayout.module.scss';
 
 
 function ProntuarioList() {
@@ -104,38 +105,31 @@ function ProntuarioList() {
             </Form>
             <table className={'table table-striped table-bordered table-condensed table-hover'}>
                 <thead>
-                <tr>
-                    <th>PACIENTE</th>
-                    <th>DIAGNÓSTICO</th>
-                    <th>RECEITUÁRIO</th>
-                    <th>AÇÕES</th>
-                </tr>
+                    <tr>
+                        <th>PACIENTE</th>
+                        <th>AÇÕES</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {
-                    prontuarioPacientes.map((prontuarioPacientes) => {
-                        return (
-                            <tr key={prontuarioPacientes.id}>
-                                <td>
-                                    {pacientes.get(prontuarioPacientes.paciente_id)}
-                                </td>
-                                <td>
-                                    {prontuarioPacientes.diagnostico}
-                                </td>
-                                <td>
-                                    {prontuarioPacientes.receituario}
-                                </td>
-                                <td>
-                                    <div>
-                                        <FaEdit onClick={() => navigate('edit/' + prontuarioPacientes.id)}></FaEdit>
-                                        <FaTrash onClick={() => remove(prontuarioPacientes.id)}></FaTrash>
-                                        <FaFile onClick={() => navigate('historic/ '+ prontuarioPacientes.paciente_id)}></FaFile>
-                                    </div>
-                                </td>
-                            </tr>
-                        )
-                    })
-                }
+                    {
+                        prontuarioPacientes.map((prontuarioPacientes) => {
+                            return (
+                                <tr key={prontuarioPacientes.id}>
+                                    <td>
+                                        {pacientes.get(prontuarioPacientes.paciente_id)}
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <BsEyeFill title={'Visualizar Prontuário'} className={styles.spaceIcons} onClick={() => navigate('view/' + prontuarioPacientes.id)}></BsEyeFill>
+                                            <FaEdit title={'Editar Prontuário'} className={styles.spaceIcons} onClick={() => navigate('edit/' + prontuarioPacientes.id)}></FaEdit>
+                                            <FaTrash title={'Apagar Prontuário'} className={styles.spaceIcons} onClick={() => remove(prontuarioPacientes.id)}></FaTrash>
+                                            <FaFile title={'Histórico de Consultas'} className={styles.spaceIcons} onClick={() => navigate('historic/ '+ prontuarioPacientes.paciente_id)}></FaFile>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )
+                        })
+                    }
                 </tbody>
             </table>
         </div>

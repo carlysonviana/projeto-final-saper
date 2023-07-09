@@ -6,6 +6,7 @@ import {FaCheck, FaEdit, FaTrash} from "react-icons/fa";
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import {BsPlus, BsSearch, BsX} from "react-icons/bs";
 import {AuthContext} from "../../../store/store";
+import styles from '../../../components/layout/baseLayout/BaseLayout.module.scss';
 
 function ConsultaList() {
     const API = useAPI();
@@ -206,9 +207,9 @@ function ConsultaList() {
                             {auth.user?.categoriaFuncionario_id === 1 && (
                                 <td>
                                     <div>
-                                        <FaEdit onClick={() => navigate('edit/' + consulta.consulta_id)}></FaEdit>
-                                        <FaTrash onClick={() => remove(consulta.consulta_id)}></FaTrash>
-                                        <FaCheck onClick={() => confirmarConsulta(consulta.consulta_id)}></FaCheck>
+                                        <FaEdit className={styles.spaceIcons} onClick={() => navigate('edit/' + consulta.consulta_id)}></FaEdit>
+                                        <FaTrash className={styles.spaceIcons} onClick={() => remove(consulta.consulta_id)}></FaTrash>
+                                        <FaCheck className={styles.spaceIcons} onClick={() => confirmarConsulta(consulta.consulta_id)}></FaCheck>
                                     </div>
                                 </td>
                             )}
