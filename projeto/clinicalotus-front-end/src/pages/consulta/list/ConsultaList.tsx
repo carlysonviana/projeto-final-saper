@@ -207,9 +207,9 @@ function ConsultaList() {
                             {auth.user?.categoriaFuncionario_id === 1 && (
                                 <td>
                                     <div>
-                                        <FaEdit className={styles.spaceIcons} onClick={() => navigate('edit/' + consulta.consulta_id)}></FaEdit>
-                                        <FaTrash className={styles.spaceIcons} onClick={() => remove(consulta.consulta_id)}></FaTrash>
-                                        <FaCheck className={styles.spaceIcons} onClick={() => confirmarConsulta(consulta.consulta_id)}></FaCheck>
+                                        <FaEdit className={styles.spaceIcons} title={'Editar Consulta'} onClick={() => navigate('edit/' + consulta.consulta_id)}></FaEdit>
+                                        <FaTrash className={styles.spaceIcons} title={'Remover Consulta'} onClick={() => remove(consulta.consulta_id)}></FaTrash>
+                                        <FaCheck className={styles.spaceIcons} title={'Confirmar Presença do Paciente'} onClick={() => confirmarConsulta(consulta.consulta_id)}></FaCheck>
                                     </div>
                                 </td>
                             )}
