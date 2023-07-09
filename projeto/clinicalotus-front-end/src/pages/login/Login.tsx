@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react'
-import './Login.scss'
+import './Login.module.scss'
 import { LoginState } from "./types";
 import { Button, Card, Form } from 'react-bootstrap';
 import { useTranslation } from "react-i18next";
@@ -15,6 +15,8 @@ import {
     MDBInput
 }
 from 'mdb-react-ui-kit';
+import styles from "./Login.module.scss";
+import logoInicial from "../../assets/imgs/logo-inicial.png";
 
 function Login() {
   const [state, setState] = useState<LoginState>()
@@ -46,7 +48,7 @@ function Login() {
   }
 
   return (
-      <Form onSubmit={handleSubmit}>
+      <Form className={styles.loginStyle} onSubmit={handleSubmit}>
           <MDBContainer className="my-5 gradient-form">
 
               <MDBRow>
@@ -55,48 +57,38 @@ function Login() {
                       <div className="d-flex flex-column ms-5">
 
                           <div className="text-center">
-                              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
-                                   style={{width: '185px'}} alt="logo" />
-                              <h4 className="mt-1 mb-5 pb-1">Clínica Lótus</h4>
+                              <img className={styles.space} src={logoInicial} alt={'Logo'}/>
                           </div>
 
-                          <p>Por favor, digite seu login</p>
+                          <p>Por favor, digite seu login e senha</p>
 
 
-                          <MDBInput wrapperClass='mb-4' label='Login' name={'login'} value={state?.login} onChange={handleOnChange}/>
-                          <MDBInput wrapperClass='mb-4' label='Senha' name={'senha'} type={'password'} value={state?.senha} onChange={handleOnChange}/>
+                          <MDBInput wrapperClass='mb-4' placeholder={'Login'} name={'login'} value={state?.login} onChange={handleOnChange}/>
+                          <MDBInput wrapperClass='mb-4' placeholder={'Senha'} name={'senha'} type={'password'} value={state?.senha} onChange={handleOnChange}/>
 
 
                           <div className="text-center pt-1 mb-5 pb-1">
                               <Button className="mb-4 w-100 gradient-custom-2" type={'submit'}>Entrar</Button>
-                              <a className="text-muted" href="#!">Esqueceu a senha?</a>
-                          </div>
-
-                          <div className="d-flex flex-row align-items-center justify-content-center pb-4 mb-4">
-                              <p className={"mb-0"}>Não tem uma conta?</p>
-                              <Button onClick={() => navigate('/criarConta')} type='button' className={'btn btn-danger mx-2'} >
-                                  Criar Conta
-                              </Button>
                           </div>
 
                       </div>
 
                   </MDBCol>
 
-                  <MDBCol col='6' className="mb-5">
-                      <div className="d-flex flex-column  justify-content-center gradient-custom-2 h-100 mb-4">
+                  {/*<MDBCol col='6' className="mb-5">*/}
+                  {/*    <div className="d-flex flex-column  justify-content-center gradient-custom-2 h-100 mb-4">*/}
 
-                          <div className="text-white px-3 py-4 p-md-5 mx-md-4">
-                              <h4 className="mb-4">We are more than just a company</h4>
-                              <p className="small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                              </p>
-                          </div>
+                  {/*        <div className="text-white px-3 py-4 p-md-5 mx-md-4">*/}
+                  {/*            <h4 className="mb-4">We are more than just a company</h4>*/}
+                  {/*            <p className="small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod*/}
+                  {/*                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud*/}
+                  {/*                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.*/}
+                  {/*            </p>*/}
+                  {/*        </div>*/}
 
-                      </div>
+                  {/*    </div>*/}
 
-                  </MDBCol>
+                  {/*</MDBCol>*/}
 
               </MDBRow>
 
