@@ -49,7 +49,16 @@ function HorarioAtendimentoEdit() {
                 <Form onSubmit={handleSubmit}>
                     <Form.Group>
                         <Form.Label>Dia da Semana</Form.Label>
-                        <Form.Control type={'text'} name={'diaDaSemana'} onChange={handleOnChange} value={state?.diaDaSemana}></Form.Control>
+                        <Form.Control as={'select'} name={'diaDaSemana'} onChange={handleOnChange} value={state?.diaDaSemana}>
+                            <option></option>
+                            <option value={"segunda-feira"}>SEGUNDA-FEIRA</option>
+                            <option value={"terça-feira"}>TERÇA-FEIRA</option>
+                            <option value={"quarta-feira"}>QUARTA-FEIRA</option>
+                            <option value={"quinta-feira"}>QUINTA-FEIRA</option>
+                            <option value={"sexta-feira"}>SEXTA-FEIRA</option>
+                            <option value={"sábado"}>SÁBADO</option>
+                            <option value={"domingo"}>DOMINGO</option>
+                        </Form.Control>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Horario Inicial</Form.Label>
@@ -58,6 +67,7 @@ function HorarioAtendimentoEdit() {
                     <Form.Group>
                         <Form.Label>Horario Final</Form.Label>
                         <Form.Control type={'time'} name={'horarioFim'} onChange={handleOnChange} value={state?.horarioFim}></Form.Control>
+                        <p></p>
                     </Form.Group>
                     <Button type={'submit'}>Atualizar</Button>
                 </Form>

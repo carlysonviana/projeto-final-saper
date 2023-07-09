@@ -3,14 +3,14 @@ export type HorarioAtendimento = {
     "diaDaSemana": string,
     "horarioInicio": string,
     "horarioFim": string,
-    "medico_id"?: number
+    "medico_id": number
 }
 
 export type HorarioAtendimentoAddForm = {
     "diaDaSemana": string,
     "horarioInicio": string,
     "horarioFim": string,
-    "medico_id"?: number
+    "medico_id": number
 }
 
 export type HorarioAtendimentoEditForm = {
