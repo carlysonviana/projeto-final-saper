@@ -97,16 +97,11 @@ function SideBar() {
             </Link>
             <hr />
             <ul className="nav nav-pills flex-column mb-auto">
-                {/*<li className="nav-item">*/}
-                {/*    <Link to="/" className="nav-link text-white" aria-current="page">*/}
-                {/*        Home*/}
-                {/*    </Link>*/}
-                {/*</li>*/}
                 {
                     routes[auth.user?.categoriaFuncionario_id || 4].map((route: any) => {
                         return (
-                            <li className="nav-item" key={route.path}>
-                                <Link to={route.path} className="nav-link text-white" aria-current="page">
+                            <li className={"nav-item "+styles['hover-link']} key={route.path}>
+                                <Link to={route.path} className={"nav-link text-white"} aria-current="page">
                                     {route.icon}{' '}
                                     {route.text}
                                 </Link>

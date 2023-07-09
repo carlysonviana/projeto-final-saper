@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import useAPI from "../../../service/api";
 import { useNavigate } from "react-router-dom";
 import { Prontuario } from "../type";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import {FaEdit, FaFile, FaTrash} from "react-icons/fa";
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { BsPlus, BsSearch, BsX } from "react-icons/bs";
 
@@ -33,6 +33,7 @@ function ProntuarioList() {
                     pacientesMap.set(paciente.id, paciente.nome);
                 });
                 setPacientes(pacientesMap);
+                console.log(pacientesMap);
             }
 
 
@@ -77,7 +78,7 @@ function ProntuarioList() {
 
 
     return (
-        <div className={'offset-md-1 col-md-8'}>
+        <div className={'offset-md-1 col-md-8 '}>
             <h1>Lista de Prontuarios</h1>
             <Form>
                 <Row>
@@ -103,37 +104,38 @@ function ProntuarioList() {
             </Form>
             <table className={'table table-striped table-bordered table-condensed table-hover'}>
                 <thead>
-                    <tr>
-                        <th>PACIENTE</th>
-                        <th>DIAGNÓSTICO</th>
-                        <th>RECEITUÁRIO</th>
-                        <th>AÇÕES</th>
-                    </tr>
+                <tr>
+                    <th>PACIENTE</th>
+                    <th>DIAGNÓSTICO</th>
+                    <th>RECEITUÁRIO</th>
+                    <th>AÇÕES</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {
-                        prontuarioPacientes.map((prontuarioPacientes) => {
-                            return (
-                                <tr key={prontuarioPacientes.id}>
-                                    <td>
-                                        {pacientes.get(prontuarioPacientes.paciente_id)}
-                                    </td>
-                                    <td>
-                                        {prontuarioPacientes.diagnostico}
-                                    </td>
-                                    <td>
-                                        {prontuarioPacientes.receituario}
-                                    </td>
-                                    <td>
-                                        <div>
-                                            <FaEdit onClick={() => navigate('edit/' + prontuarioPacientes.id)}></FaEdit>
-                                            <FaTrash onClick={() => remove(prontuarioPacientes.id)}></FaTrash>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )
-                        })
-                    }
+                {
+                    prontuarioPacientes.map((prontuarioPacientes) => {
+                        return (
+                            <tr key={prontuarioPacientes.id}>
+                                <td>
+                                    {pacientes.get(prontuarioPacientes.paciente_id)}
+                                </td>
+                                <td>
+                                    {prontuarioPacientes.diagnostico}
+                                </td>
+                                <td>
+                                    {prontuarioPacientes.receituario}
+                                </td>
+                                <td>
+                                    <div>
+                                        <FaEdit onClick={() => navigate('edit/' + prontuarioPacientes.id)}></FaEdit>
+                                        <FaTrash onClick={() => remove(prontuarioPacientes.id)}></FaTrash>
+                                        <FaFile onClick={() => navigate('historic/ '+ prontuarioPacientes.paciente_id)}></FaFile>
+                                    </div>
+                                </td>
+                            </tr>
+                        )
+                    })
+                }
                 </tbody>
             </table>
         </div>

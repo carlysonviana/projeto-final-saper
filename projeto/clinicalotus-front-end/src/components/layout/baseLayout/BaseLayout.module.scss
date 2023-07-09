@@ -4,6 +4,7 @@
   .sidebar {
     width: 280px;
     min-height: 85vh;
+    background-color: #1c1c39;
   }
 }
 
@@ -16,3 +17,9 @@
   display: block;
   margin: 0 auto;
 }
+
+.backgroundImage{
+  background: url("../../../assets/imgs/back_ground_lotus.jpg");
+  background-position: right center;
+}
+
