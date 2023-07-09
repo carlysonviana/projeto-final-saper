@@ -85,15 +85,15 @@ function SideBar(){
             <Link to="/" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                 <svg className="bi pe-none me-2" width="40" height="32">
                 </svg>
-                <span className="fs-4">Sidebar</span>
+                <span className="fs-4">Clínica Lótus</span>
             </Link>
             <hr/>
             <ul className="nav nav-pills flex-column mb-auto">
-                <li className="nav-item">
-                    <Link to="/" className="nav-link text-white" aria-current="page">
-                        Home
-                    </Link>
-                </li>
+                {/*<li className="nav-item">*/}
+                {/*    <Link to="/" className="nav-link text-white" aria-current="page">*/}
+                {/*        Home*/}
+                {/*    </Link>*/}
+                {/*</li>*/}
                 {
                     routes[auth.user?.categoriaFuncionario_id || 4].map((route: any) => {
                         return (
