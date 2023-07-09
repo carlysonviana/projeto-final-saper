@@ -5,9 +5,15 @@ import { AuthContext } from "store/store";
 import { HiUserGroup } from "react-icons/hi";
 import { LiaStethoscopeSolid } from "react-icons/lia";
 import { LuCalendarClock, LuFileText } from "react-icons/lu";
+import angelica from "../../../assets/imgs/foto_angelica.png";
+import galba from "../../../assets/imgs/foto_galba.png";
+import carlyson from "../../../assets/imgs/foto_carlyson.png";
+import darlan from "../../../assets/imgs/foto_darlan.png";
+
 function SideBar() {
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
+    const fotoUsuario = new Map<string, any>([['angelica', angelica], ['carlyson',carlyson], ['galba', galba], ['darlan', darlan]]);
 
     function handleSingOut() {
         if (auth.setUser) auth.setUser(undefined);
@@ -115,8 +121,12 @@ function SideBar() {
                 <a href="#"
                     className="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                     data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="https://github.com/mdo.png" alt="" width="32" height="32"
-                        className="rounded-circle me-2" />
+                    {(auth.user?.login == 'angelica' || auth.user?.login == 'galba' || auth.user?.login == 'carlyson' || auth.user?.login == 'darlan')?
+                        <img src={fotoUsuario.get(auth.user?.login)} alt="" width="32" height="32"
+                             className="rounded-circle me-2" />:
+                        <img src="https://github.com/mdo.png" alt="" width="32" height="32"
+                             className="rounded-circle me-2" />
+                    }
                     <strong>{auth.user?.nome}</strong>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-dark text-small shadow">
