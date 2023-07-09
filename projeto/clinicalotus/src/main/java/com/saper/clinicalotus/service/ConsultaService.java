@@ -6,9 +6,11 @@ import com.saper.clinicalotus.exception.exceptions.ConflictStoreException;
 import com.saper.clinicalotus.model.Consulta;
 import com.saper.clinicalotus.model.Medico;
 import com.saper.clinicalotus.model.Paciente;
+import com.saper.clinicalotus.model.Prontuario;
 import com.saper.clinicalotus.repository.ConsultaRepository;
 import com.saper.clinicalotus.repository.MedicoRepository;
 import com.saper.clinicalotus.repository.PacienteRepository;
+import com.saper.clinicalotus.repository.ProntuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,9 @@ public class ConsultaService {
     PacienteRepository pacienteRepository;
     @Autowired
     MedicoRepository medicoRepository;
+
+    @Autowired
+    ProntuarioRepository prontuarioRepository;
     @Transactional
     public ResponseEntity<Object> save(ConsultaRequestDTO consultaRequestDTO) {
         //Verifcar se paciente existe
@@ -42,6 +47,21 @@ public class ConsultaService {
 
         consulta.setPaciente(paciente);
         consulta.setMedico(medico);
+
+        if( paciente.getProntuario() == null){
+            Prontuario prontuario = new Prontuario();
+
+            paciente.setProntuario(prontuario);
+
+            prontuario.setPaciente(paciente);
+
+            consulta.setProntuario(prontuario);
+
+            prontuarioRepository.save(prontuario);
+        }else{
+            Prontuario prontuario = prontuarioRepository.findById(paciente.getProntuario().getId()).orElseThrow(() -> new NoSuchElementException("Prontuario não encontrado"));
+            consulta.setProntuario(prontuario);
+        }
 
         try {
             consultaRepository.save(consulta);

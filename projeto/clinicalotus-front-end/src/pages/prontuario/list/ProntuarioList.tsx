@@ -1,23 +1,23 @@
 import React, { useContext, useEffect, useState } from 'react'
 import useAPI from "../../../service/api";
 import { useNavigate } from "react-router-dom";
-import { HorarioAtendimento } from "../type";
+import { Prontuario } from "../type";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { BsPlus, BsSearch, BsX } from "react-icons/bs";
 
 
-function HorarioAtendimentoList() {
+function ProntuarioList() {
     const API = useAPI();
     const navigate = useNavigate();
-    const [horarioAtendimentos, setHorarioAtendimentos] = useState<HorarioAtendimento[]>([]);
-    const [medicos, setMedicos] = useState<Map<number, string>>(new Map<number, string>());
-    const [filtroMedico, setFiltroMedico] = useState('');
+    const [prontuarioPacientes, setProntuarioPacientes] = useState<Prontuario[]>([])
+    const [pacientes, setPacientes] = useState<Map<number, string>>(new Map<number, string>());
+    const [filtroPaciente, setFiltroPaciente] = useState('');
 
     useEffect(() => {
-        API.get('horarioAtendimento').then((data) => {
+        API.get('prontuario').then((data) => {
             if (Array.isArray(data)) {
-                setHorarioAtendimentos(data);
+                setProntuarioPacientes(data);
                 onLoad();
             }
         })
@@ -25,46 +25,48 @@ function HorarioAtendimentoList() {
 
     const onLoad = async () => {
         try {
-            const medicosData = await API.get('funcionario');
+            const pacientesData = await API.get('paciente');
 
-
-            if (Array.isArray(medicosData)) {
-                const medicosMap = new Map<number, string>();
-                medicosData.forEach((funcionario: { id: number; nome: string }) => {
-                    medicosMap.set(funcionario.id, funcionario.nome);
+            if (Array.isArray(pacientesData)) {
+                const pacientesMap = new Map<number, string>();
+                pacientesData.forEach((paciente: { id: number; nome: string }) => {
+                    pacientesMap.set(paciente.id, paciente.nome);
                 });
-                setMedicos(medicosMap);
+                setPacientes(pacientesMap);
             }
+
+
         } catch (e) {
             console.log(e);
         }
     };
 
     const remove = (id: number) => {
-        API.delete('horarioAtendimento/' + id).then((data) => {
-            API.get('horarioAtendimento').then((data) => {
-                if (Array.isArray(data)) setHorarioAtendimentos(data);
+        API.delete('prontuario/' + id).then((data) => {
+            API.get('prontuario').then((data) => {
+                if (Array.isArray(data)) setProntuarioPacientes(data);
             })
         })
     }
 
-    const filtrarHorarioAtendimento = () => {
-        const horarioAtendimentosFiltrados = horarioAtendimentos.filter((horarioAtendimento) => {
-            if (filtroMedico && !medicos.get(horarioAtendimento.medico_id)?.toLowerCase().includes(filtroMedico.toLowerCase())) {
+    const filtrarProntuarios = () => {
+        const prontuariosFiltrados = prontuarioPacientes.filter((prontuario) => {
+
+            if (filtroPaciente && !pacientes.get(prontuario.paciente_id)?.toLowerCase().includes(filtroPaciente.toLowerCase())) {
                 return false;
             }
             return true;
         });
 
-        setHorarioAtendimentos(horarioAtendimentosFiltrados);
+        setProntuarioPacientes(prontuariosFiltrados);
     };
 
     const limparFiltros = () => {
-        setFiltroMedico('');
-        API.get('horarioAtendimento')
+        setFiltroPaciente('');
+        API.get('prontuario')
             .then((data) => {
                 if (Array.isArray(data)) {
-                    setHorarioAtendimentos(data);
+                    setProntuarioPacientes(data);
                     onLoad();
                 }
             })
@@ -73,16 +75,17 @@ function HorarioAtendimentoList() {
             });
     };
 
+
     return (
         <div className={'offset-md-1 col-md-8'}>
-            <h1>Lista de Horários</h1>
+            <h1>Lista de Prontuarios</h1>
             <Form>
                 <Row>
                     <Col>
-                        <Form.Control type="text" placeholder="Filtrar por Médico" value={filtroMedico} onChange={(e) => setFiltroMedico(e.target.value)} />
+                        <Form.Control type="text" placeholder="Filtrar por Paciente" value={filtroPaciente} onChange={(e) => setFiltroPaciente(e.target.value)} />
                     </Col>
                     <Col>
-                        <Button variant="primary" onClick={filtrarHorarioAtendimento}>
+                        <Button variant="primary" onClick={filtrarProntuarios}>
                             <BsSearch /> Filtrar
                         </Button>
                     </Col>
@@ -101,34 +104,30 @@ function HorarioAtendimentoList() {
             <table className={'table table-striped table-bordered table-condensed table-hover'}>
                 <thead>
                     <tr>
-                        <th>MÉDICO</th>
-                        <th>DIA</th>
-                        <th>HORARIO INICIO</th>
-                        <th>HORARIO FIM</th>
+                        <th>PACIENTE</th>
+                        <th>DIAGNÓSTICO</th>
+                        <th>RECEITUÁRIO</th>
                         <th>AÇÕES</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
-                        horarioAtendimentos.map((horarioAtendimento) => {
+                        prontuarioPacientes.map((prontuarioPacientes) => {
                             return (
-                                <tr key={horarioAtendimento.horario_id}>
+                                <tr key={prontuarioPacientes.id}>
                                     <td>
-                                        {medicos.get(horarioAtendimento.medico_id)}
+                                        {pacientes.get(prontuarioPacientes.paciente_id)}
                                     </td>
                                     <td>
-                                        {horarioAtendimento.diaDaSemana}
+                                        {prontuarioPacientes.diagnostico}
                                     </td>
                                     <td>
-                                        {horarioAtendimento.horarioInicio}
-                                    </td>
-                                    <td>
-                                        {horarioAtendimento.horarioFim}
+                                        {prontuarioPacientes.receituario}
                                     </td>
                                     <td>
                                         <div>
-                                            <FaEdit onClick={() => navigate('edit/' + horarioAtendimento.horario_id)}></FaEdit>
-                                            <FaTrash onClick={() => remove(horarioAtendimento.horario_id)}></FaTrash>
+                                            <FaEdit onClick={() => navigate('edit/' + prontuarioPacientes.id)}></FaEdit>
+                                            <FaTrash onClick={() => remove(prontuarioPacientes.id)}></FaTrash>
                                         </div>
                                     </td>
                                 </tr>
@@ -140,4 +139,4 @@ function HorarioAtendimentoList() {
         </div>
     );
 }
-export default HorarioAtendimentoList
+export default ProntuarioList
