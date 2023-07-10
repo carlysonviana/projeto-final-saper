@@ -87,8 +87,6 @@ function ProntuarioList() {
 
     const sendEmail = (id: number) => {
         API.get('prontuario/'+id).then((data) => {
-
-            // if (Array.isArray(data)) setProntuarioPacientes(data);
             const templateProntuario = {
                 from_name: auth.user?.nome,
                 patient_name: pacientes.get(data.paciente_id),
@@ -96,9 +94,14 @@ function ProntuarioList() {
                 receituario: data.receituario,
                 email: emails.get(data.paciente_id)
             }
-            console.log(templateProntuario);
-            emailjs.send("service_8xhwmah", "template_zerhqof", templateProntuario, "-wnNrPGvVkkkC0fIr")
-                .then((response) => alert("Email enviado com sucesso!"));
+            if(templateProntuario.diagnostico != '' && templateProntuario.receituario){
+                emailjs.send("service_8xhwmah", "template_zerhqof", templateProntuario, "-wnNrPGvVkkkC0fIr")
+                    .then((response) => alert("Email enviado com sucesso!"));
+            }
+            else{
+                alert("Campos diagnóstico e receituário não podem ser nulos!");
+            }
+
         })
     }
 
