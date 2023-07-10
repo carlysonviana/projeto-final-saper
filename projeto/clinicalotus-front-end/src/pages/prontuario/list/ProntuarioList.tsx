@@ -6,6 +6,10 @@ import {FaEdit, FaFile, FaTrash} from "react-icons/fa";
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { BsPlus, BsSearch, BsX, BsEyeFill } from "react-icons/bs";
 import styles from '../../../components/layout/baseLayout/BaseLayout.module.scss';
+import {RiMailSendLine} from "react-icons/ri";
+import emailjs from "@emailjs/browser";
+import {AuthContext} from "../../../store/store";
+import {Paciente} from "../../paciente/type";
 
 
 function ProntuarioList() {
@@ -13,7 +17,10 @@ function ProntuarioList() {
     const navigate = useNavigate();
     const [prontuarioPacientes, setProntuarioPacientes] = useState<Prontuario[]>([])
     const [pacientes, setPacientes] = useState<Map<number, string>>(new Map<number, string>());
+    const [emails, setEmails] = useState<Map<number, string>>(new Map<number, string>());
     const [filtroPaciente, setFiltroPaciente] = useState('');
+    const [paciente, setPaciente] = useState<Paciente>();
+    const auth = useContext(AuthContext);
 
     useEffect(() => {
         API.get('prontuario').then((data) => {
@@ -30,8 +37,9 @@ function ProntuarioList() {
 
             if (Array.isArray(pacientesData)) {
                 const pacientesMap = new Map<number, string>();
-                pacientesData.forEach((paciente: { id: number; nome: string }) => {
+                pacientesData.forEach((paciente: { id: number; nome: string, email: string}) => {
                     pacientesMap.set(paciente.id, paciente.nome);
+                    emails.set(paciente.id, paciente.email);
                 });
                 setPacientes(pacientesMap);
                 console.log(pacientesMap);
@@ -77,6 +85,25 @@ function ProntuarioList() {
             });
     };
 
+    const sendEmail = (id: number) => {
+        API.get('prontuario/'+id).then((data) => {
+            const templateProntuario = {
+                from_name: auth.user?.nome,
+                patient_name: pacientes.get(data.paciente_id),
+                diagnostico: data.diagnostico,
+                receituario: data.receituario,
+                email: emails.get(data.paciente_id)
+            }
+            if(templateProntuario.diagnostico != '' && templateProntuario.receituario){
+                emailjs.send("service_8xhwmah", "template_zerhqof", templateProntuario, "-wnNrPGvVkkkC0fIr")
+                    .then((response) => alert("Email enviado com sucesso!"));
+            }
+            else{
+                alert("Campos diagnóstico e receituário não podem ser nulos!");
+            }
+
+        })
+    }
 
     return (
         <div className={'offset-md-1 col-md-8 '}>
@@ -124,6 +151,7 @@ function ProntuarioList() {
                                             <FaEdit title={'Editar Prontuário'} className={styles.spaceIcons} onClick={() => navigate('edit/' + prontuarioPacientes.id)}></FaEdit>
                                             <FaTrash title={'Apagar Prontuário'} className={styles.spaceIcons} onClick={() => remove(prontuarioPacientes.id)}></FaTrash>
                                             <FaFile title={'Histórico de Consultas'} className={styles.spaceIcons} onClick={() => navigate('historic/ '+ prontuarioPacientes.paciente_id)}></FaFile>
+                                            <RiMailSendLine  title={'Enviar Prontuário'} onClick={() => sendEmail(prontuarioPacientes.id)}></RiMailSendLine>
                                         </div>
                                     </td>
                                 </tr>
